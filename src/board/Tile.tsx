@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface TileProps {
-  user: boolean;
+  userId?: string;
 }
 
-function Tile({ user }: TileProps) {
+function Tile({ userId }: TileProps) {
   const classes = useStyles();
 
-  return <Box className={classes.root} bgcolor={user ? "black" : "red"} />;
+  return <Box className={classes.root} bgcolor={userId ? "black" : "red"} />;
 }
 
 export default Tile;

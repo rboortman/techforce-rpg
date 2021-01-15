@@ -7,81 +7,20 @@ import "firebase/firestore";
 
 import theme from "./common/theme";
 
-import "./App.css";
+import "./api/firebase";
+import * as api from "./api/board";
+
 import Grid from "./board/Grid";
 import AppBar from "./header/AppBar";
 import Controls from "./board/Controls";
-import { gridSize } from "./common/generalVariables";
-import {
-  BoardType,
-  BoardCoordinate,
-  ActionInterface,
-  MoveDirection,
-} from "./common/interfaces";
+import { ActionInterface, BoardInterface } from "./common/interfaces";
 
-const initialState: BoardType = [[]];
-const initialPosition: BoardCoordinate = { x: 0, y: 0 };
+const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
-function findUser(board: BoardType) {
-  let position: BoardCoordinate | undefined;
-  board.forEach((row, i) => {
-    row.forEach((cell, j) => {
-      if (cell?.user) position = { x: j, y: i };
-    });
-  });
-  return position;
-}
-
-function reducer(state: BoardType, action: ActionInterface) {
+function reducer(state: BoardInterface, action: ActionInterface) {
   switch (action.type) {
-    case "init":
-      let newState: BoardType = [];
-      for (let i = 0; i < gridSize; i++) {
-        newState[i] = [];
-        for (let j = 0; j < gridSize; j++) {
-          newState[i][j] = {
-            user: i === initialPosition.y && j === initialPosition.x,
-          };
-        }
-      }
-      return newState;
-
-    case "move":
-      const position = findUser(state);
-      if (position) {
-        let newPosition = { ...position };
-        switch (action.payload.direction) {
-          case MoveDirection.UP:
-            newPosition.y--;
-            break;
-
-          case MoveDirection.DOWN:
-            newPosition.y++;
-            break;
-
-          case MoveDirection.LEFT:
-            newPosition.x--;
-            break;
-
-          case MoveDirection.RIGHT:
-            newPosition.x++;
-            break;
-        }
-        if (
-          newPosition.x < 0 ||
-          newPosition.x >= gridSize ||
-          newPosition.y < 0 ||
-          newPosition.y >= gridSize
-        ) {
-          newPosition = { ...position };
-        }
-        return state.map((row, i) =>
-          row.map((cell, j) => ({
-            user: i === newPosition.y && j === newPosition.x,
-          }))
-        );
-      }
-      return state;
+    case "update":
+      return action.payload.board;
 
     default:
       return state;
@@ -102,7 +41,7 @@ function App() {
     const fetchUsers = async () => {
       const querySnapshot = await firebase
         .firestore()
-        .collection("users")
+        .collection("players")
         .get();
       querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data().name}`);
@@ -113,8 +52,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    boardDispatcher({ type: "init" });
+    api.registerBoardUpdateListener((board) => {
+      boardDispatcher({
+        type: "update",
+        payload: { board },
+      });
+    });
   }, []);
+
+  useEffect(() => {}, [board, user]);
+
+  useEffect(() => {
+    // boardDispatcher({
+    //   type: "init",
+    //   payload: { userId: user ? user.uid : "" },
+    // });
+  }, [user]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -126,11 +79,7 @@ function App() {
           <Grid board={board} />
         </Box>
         <Box className="bottom">
-          <Controls
-            onMove={(direction) => {
-              boardDispatcher({ type: "move", payload: { direction } });
-            }}
-          />
+          {user && <Controls board={board} user={user} />}
         </Box>
       </Box>
     </ThemeProvider>

@@ -1,21 +1,21 @@
 export interface TileConfig {
-  user: boolean;
+  userId: string;
 }
-
-interface InitActionInterface {
-  type: "init";
-}
-
-interface MoveActionInterface {
-  type: "move";
+interface UpdateActionInterface {
+  type: "update";
   payload: {
-    direction: MoveDirection;
+    board: BoardInterface;
   };
 }
 
-export type ActionInterface = InitActionInterface | MoveActionInterface;
+export type ActionInterface = UpdateActionInterface;
 
-export type BoardType = TileConfig[][];
+type Row = {
+  cells: TileConfig[];
+};
+export interface BoardInterface {
+  rows: Row[];
+}
 
 export interface BoardCoordinate {
   x: number;
@@ -27,4 +27,9 @@ export enum MoveDirection {
   DOWN,
   LEFT,
   RIGHT,
+}
+
+export interface Player {
+  color: string;
+  id: string;
 }

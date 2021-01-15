@@ -6,7 +6,9 @@ import Typography from "@material-ui/core/Typography";
 
 import firebase from "firebase/app";
 
-import { LoginButton, LogoutButton } from "../api/firebase";
+import UserDialog from "./UserDialog";
+import { LogoutButton } from "./LogoutButton";
+import { LoginButton } from "./LoginButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +35,7 @@ const AppBarComponent = ({ user }: AppBarProps) => {
         <Typography variant="h6" className={classes.title}>
           TECHFORCE RPG
         </Typography>
+        <UserDialog />
         {user && <LogoutButton />}
         {!user && <LoginButton />}
       </Toolbar>
