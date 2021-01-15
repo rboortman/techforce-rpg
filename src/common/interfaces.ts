@@ -30,6 +30,10 @@ export enum MoveDirection {
 }
 
 export interface Player {
-  color: string;
   id: string;
+  color: string;
+}
+
+export interface PlayerData {
+  [key: string]: Player
 }

@@ -10,9 +10,16 @@ import { useTheme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Face from "@material-ui/icons/Face";
 
-import ColorPicker from "../common/ColorPicker";
+import firebase from "firebase/app";
 
-export default function UserDialog() {
+import ColorPicker from "../common/ColorPicker";
+import { updatePlayer } from "../api/player";
+
+interface UserDialogProps {
+  user: firebase.User | null;
+}
+
+export default function UserDialog({ user }: UserDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [color, setColor] = React.useState("#2196f3");
   const theme = useTheme();
@@ -25,6 +32,8 @@ export default function UserDialog() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  if (!user) return null
 
   return (
     <div>
@@ -54,6 +63,7 @@ export default function UserDialog() {
             color={color}
             onChange={(value) => {
               setColor(value);
+              updatePlayer({id: user.uid, color: value})
             }}
           />
         </DialogContent>

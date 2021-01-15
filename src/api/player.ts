@@ -1,9 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { Player } from "../common/interfaces";
+import { Player, PlayerData } from "../common/interfaces";
 
-// Private functions
+// Public functions
 async function savePlayer(player: Player) {
   const playerDocument = await firebase
     .firestore()
@@ -13,23 +13,23 @@ async function savePlayer(player: Player) {
   await playerDocument.update(player);
 }
 
-// Public functions
-export async function update(player: Player) {
+export async function updatePlayer(player: Player) {
   await savePlayer(player);
 }
 
-export async function fetchUsers () {
+export async function fetchPlayers () {
+  
+  const playerData: PlayerData = {};
+
   const querySnapshot = await firebase
     .firestore()
     .collection("players")
     .get();
 
-  const players: Player[] = [];
   querySnapshot.forEach((doc) => {
-    const data = doc.data() as {color: string};
-    players.push({ id: doc.id,  ...data});
+    const data = {id: doc.id, ...doc.data()} as Player;
+    playerData[doc.id] = data;
   });
-  return players;
-};
 
-fetchUsers();
+  return playerData;
+};

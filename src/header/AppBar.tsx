@@ -35,7 +35,7 @@ const AppBarComponent = ({ user }: AppBarProps) => {
         <Typography variant="h6" className={classes.title}>
           TECHFORCE RPG
         </Typography>
-        <UserDialog />
+        <UserDialog user={user} />
         {user && <LogoutButton />}
         {!user && <LoginButton />}
       </Toolbar>

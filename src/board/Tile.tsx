@@ -3,6 +3,7 @@ import { Box } from "@material-ui/core";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 import { tileSize } from "../common/generalVariables";
+import { PlayerData } from "../common/interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,12 +19,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface TileProps {
   userId?: string;
+  playerData: PlayerData;
 }
 
-function Tile({ userId }: TileProps) {
+function Tile({ userId, playerData }: TileProps) {
   const classes = useStyles();
 
-  return <Box className={classes.root} bgcolor={userId ? "black" : "red"} />;
+  return <Box className={classes.root} bgcolor={userId ? playerData[userId].color : "white"} />;
 }
 
 export default Tile;

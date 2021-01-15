@@ -8,12 +8,14 @@ import "firebase/firestore";
 import theme from "./common/theme";
 
 import "./api/firebase";
-import * as api from "./api/board";
+import * as boardApi from "./api/board";
+import * as playerApi from "./api/player";
+
 
 import Grid from "./board/Grid";
 import AppBar from "./header/AppBar";
 import Controls from "./board/Controls";
-import { ActionInterface, BoardInterface } from "./common/interfaces";
+import { ActionInterface, BoardInterface, PlayerData } from "./common/interfaces";
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
@@ -29,6 +31,7 @@ function reducer(state: BoardInterface, action: ActionInterface) {
 
 function App() {
   const [user, setUser] = useState<null | firebase.User>(null);
+  const [playerData, setPlayerData] = useState<PlayerData>({});
   const [board, boardDispatcher] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -38,21 +41,16 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const querySnapshot = await firebase
-        .firestore()
-        .collection("players")
-        .get();
-      querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data().name}`);
-      });
-    };
-
-    fetchUsers();
+    async function getPlayers() {
+      const foundPlayers = await playerApi.fetchPlayers();
+      console.log(foundPlayers);
+      setPlayerData(foundPlayers);
+    }
+    getPlayers()
   }, []);
 
   useEffect(() => {
-    api.registerBoardUpdateListener((board) => {
+    boardApi.registerBoardUpdateListener((board) => {
       boardDispatcher({
         type: "update",
         payload: { board },
@@ -76,7 +74,7 @@ function App() {
           <AppBar user={user} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          <Grid board={board} />
+          <Grid playerData={playerData} board={board} />
         </Box>
         <Box className="bottom">
           {user && <Controls board={board} user={user} />}

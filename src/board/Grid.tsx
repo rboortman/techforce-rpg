@@ -4,7 +4,7 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 import Tile from "./Tile";
 import { gridSize, tileSize } from "../common/generalVariables";
-import { BoardInterface } from "../common/interfaces";
+import { BoardInterface, PlayerData } from "../common/interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,16 +20,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface GridProps {
   board: BoardInterface;
+  playerData: PlayerData;
 }
 
-function Grid({ board }: GridProps) {
+function Grid({ board, playerData }: GridProps) {
   const classes = useStyles();
 
   return (
     <Box className={classes.root}>
       {board.rows.map((row, i) =>
         row.cells.map(({ userId }, j) => (
-          <Tile key={`${i},${j}`} userId={userId} />
+          <Tile key={`${i},${j}`} userId={userId} playerData={playerData} />
         ))
       )}
     </Box>

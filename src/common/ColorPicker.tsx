@@ -49,7 +49,7 @@ function ColorPicker({ onChange, color }: ColorPickerProps) {
         // aria-labelledby="discrete-slider"
         onChange={(_, newValue: number | number[]) => {
           if (typeof newValue === "number") {
-            onChange(temp[hue][newValue]);
+            onChange(temp[hue][shades[newValue]]);
           }
         }}
         valueLabelDisplay="auto"
