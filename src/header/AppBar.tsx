@@ -1,12 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import * as MuiAppBar from "@material-ui/core/AppBar";
+import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
 import firebase from "firebase/app";
 
-import { LoginButton, LogoutButton } from "./firebase";
+import { LoginButton, LogoutButton } from "../api/firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,11 +24,11 @@ interface AppBarProps {
   user: firebase.User | null;
 }
 
-const AppBar = ({ user }: AppBarProps) => {
+const AppBarComponent = ({ user }: AppBarProps) => {
   const classes = useStyles();
 
   return (
-    <MuiAppBar.default position="static">
+    <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           TECHFORCE RPG
@@ -36,8 +36,8 @@ const AppBar = ({ user }: AppBarProps) => {
         {user && <LogoutButton />}
         {!user && <LoginButton />}
       </Toolbar>
-    </MuiAppBar.default>
+    </AppBar>
   );
 };
 
-export default AppBar;
+export default AppBarComponent;

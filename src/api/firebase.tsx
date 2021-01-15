@@ -1,7 +1,6 @@
 import React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-
 import { Button } from "@material-ui/core";
 
 // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
@@ -19,11 +18,16 @@ firebase.initializeApp(firebaseConfig);
 const provider = new firebase.auth.GoogleAuthProvider();
 
 export const LoginButton = () => {
+  async function login() {
+    try {
+      await firebase.auth().signInWithPopup(provider);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
-    <Button
-      onClick={() => firebase.auth().signInWithPopup(provider)}
-      color="inherit"
-    >
+    <Button onClick={login} color="inherit">
       Login
     </Button>
   );
