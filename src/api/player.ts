@@ -26,11 +26,12 @@ export async function registerPlayerStoreUpdateListener (
     .firestore()
     .collection("players")
     .onSnapshot(collection => {
+      const newPlayerDataStore = {...initialPlayerData};
       collection.forEach((doc) => {
         const data = {id: doc.id, ...doc.data()} as Player;
-        initialPlayerData[doc.id] = data
+        newPlayerDataStore[doc.id] = data
       });
-      listener(initialPlayerData)
+      listener(newPlayerDataStore)
     })
 
 }
