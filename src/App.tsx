@@ -15,7 +15,7 @@ import * as playerApi from "./api/player";
 import Grid from "./board/Grid";
 import AppBar from "./header/AppBar";
 import Controls from "./board/Controls";
-import { ActionInterface, BoardInterface, PlayerData } from "./common/interfaces";
+import { ActionInterface, BoardInterface, PlayerDataStore } from "./common/interfaces";
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
@@ -31,7 +31,7 @@ function reducer(state: BoardInterface, action: ActionInterface) {
 
 function App() {
   const [user, setUser] = useState<null | firebase.User>(null);
-  const [playerData, setPlayerData] = useState<PlayerData>({});
+  const [playerDataStore, setPlayerDataStore] = useState<PlayerDataStore>({});
   const [board, boardDispatcher] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -41,12 +41,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    async function getPlayers() {
-      const foundPlayers = await playerApi.fetchPlayers();
-      console.log(foundPlayers);
-      setPlayerData(foundPlayers);
-    }
-    getPlayers()
+    playerApi.registerPlayerStoreUpdateListener((playerDataStore) => {
+      setPlayerDataStore(playerDataStore);
+    });
   }, []);
 
   useEffect(() => {
@@ -58,15 +55,6 @@ function App() {
     });
   }, []);
 
-  useEffect(() => {}, [board, user]);
-
-  useEffect(() => {
-    // boardDispatcher({
-    //   type: "init",
-    //   payload: { userId: user ? user.uid : "" },
-    // });
-  }, [user]);
-
   return (
     <ThemeProvider theme={theme}>
       <Box className="root">
@@ -74,7 +62,7 @@ function App() {
           <AppBar user={user} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          <Grid playerData={playerData} board={board} />
+          <Grid playerData={playerDataStore} board={board} />
         </Box>
         <Box className="bottom">
           {user && <Controls board={board} user={user} />}

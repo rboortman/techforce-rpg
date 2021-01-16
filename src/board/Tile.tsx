@@ -3,7 +3,7 @@ import { Box } from "@material-ui/core";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 import { tileSize } from "../common/generalVariables";
-import { PlayerData } from "../common/interfaces";
+import { PlayerDataStore } from "../common/interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface TileProps {
   userId?: string;
-  playerData: PlayerData;
+  playerData: PlayerDataStore;
 }
 
 function Tile({ userId, playerData }: TileProps) {

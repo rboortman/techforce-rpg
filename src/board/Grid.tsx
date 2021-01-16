@@ -4,7 +4,7 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 import Tile from "./Tile";
 import { gridSize, tileSize } from "../common/generalVariables";
-import { BoardInterface, PlayerData } from "../common/interfaces";
+import { BoardInterface, PlayerDataStore } from "../common/interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface GridProps {
   board: BoardInterface;
-  playerData: PlayerData;
+  playerData: PlayerDataStore;
 }
 
 function Grid({ board, playerData }: GridProps) {

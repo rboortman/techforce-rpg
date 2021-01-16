@@ -34,6 +34,6 @@ export interface Player {
   color: string;
 }
 
-export interface PlayerData {
+export interface PlayerDataStore {
   [key: string]: Player
 }
