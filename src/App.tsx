@@ -1,27 +1,26 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Box, ThemeProvider } from "@material-ui/core";
+import React, { useEffect, useReducer, useState } from 'react';
+import { Box, ThemeProvider } from '@material-ui/core';
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-import theme from "./common/theme";
+import theme from './common/theme';
 
-import "./api/firebase";
-import * as boardApi from "./api/board";
-import * as playerApi from "./api/player";
+import './api/firebase';
+import * as boardApi from './api/board';
+import * as playerApi from './api/player';
 
-
-import Grid from "./board/Grid";
-import AppBar from "./header/AppBar";
-import Controls from "./board/Controls";
-import { ActionInterface, BoardInterface, PlayerDataStore } from "./common/interfaces";
+import Grid from './board/Grid';
+import AppBar from './header/AppBar';
+import Controls from './board/Controls';
+import { ActionInterface, BoardInterface, PlayerDataStore } from './common/interfaces';
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
 function reducer(state: BoardInterface, action: ActionInterface) {
   switch (action.type) {
-    case "update":
+    case 'update':
       return action.payload.board;
 
     default:
@@ -35,22 +34,22 @@ function App() {
   const [board, boardDispatcher] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((newUser) => {
+    firebase.auth().onAuthStateChanged(newUser => {
       setUser(newUser);
     });
   }, []);
 
   useEffect(() => {
-    playerApi.registerPlayerStoreUpdateListener((playerDataStore) => {
+    playerApi.registerPlayerStoreUpdateListener(playerDataStore => {
       setPlayerDataStore(playerDataStore);
     });
   }, []);
 
   useEffect(() => {
-    boardApi.registerBoardUpdateListener((board) => {
+    boardApi.registerBoardUpdateListener(board => {
       boardDispatcher({
-        type: "update",
-        payload: { board },
+        type: 'update',
+        payload: { board }
       });
     });
   }, []);
@@ -64,9 +63,7 @@ function App() {
         <Box display="flex" className="center" m={1}>
           <Grid playerData={playerDataStore} board={board} />
         </Box>
-        <Box className="bottom">
-          {user && <Controls board={board} user={user} />}
-        </Box>
+        <Box className="bottom">{user && <Controls board={board} user={user} />}</Box>
       </Box>
     </ThemeProvider>
   );

@@ -2,7 +2,7 @@ export interface TileConfig {
   userId: string;
 }
 interface UpdateActionInterface {
-  type: "update";
+  type: 'update';
   payload: {
     board: BoardInterface;
   };
@@ -26,7 +26,7 @@ export enum MoveDirection {
   UP,
   DOWN,
   LEFT,
-  RIGHT,
+  RIGHT
 }
 
 export interface Player {
@@ -35,5 +35,5 @@ export interface Player {
 }
 
 export interface PlayerDataStore {
-  [key: string]: Player
+  [key: string]: Player;
 }

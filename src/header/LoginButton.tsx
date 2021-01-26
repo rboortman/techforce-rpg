@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import { Button } from "@material-ui/core";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import { Button } from '@material-ui/core';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 

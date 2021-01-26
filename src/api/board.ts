@@ -1,56 +1,11 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-import { gridSize } from "../common/generalVariables";
-import {
-  BoardCoordinate,
-  BoardInterface,
-  MoveDirection,
-} from "../common/interfaces";
+import { gridSize } from '../common/generalVariables';
+import { BoardCoordinate, BoardInterface, MoveDirection } from '../common/interfaces';
 
 // Private functions
-function setUserOnBoard(
-  board: BoardInterface,
-  userId: string,
-  newPosition: BoardCoordinate
-) {
-  const newBoardState: BoardInterface = {
-    rows: board.rows.map((row, i) => ({
-      cells: row.cells.map((cell, j) => {
-        if (cell.userId !== "" && cell.userId !== userId) {
-          return cell;
-        }
-        return {
-          userId: i === newPosition.y && j === newPosition.x ? userId : "",
-        };
-      }),
-    })),
-  };
-  return newBoardState;
-}
-
-function findFreeCell(board: BoardInterface) {
-  let freeCell: BoardCoordinate | undefined;
-  board.rows.forEach((row, y) => {
-    row.cells.forEach((cell, x) => {
-      if (cell.userId === "") {
-        freeCell = { x, y };
-      }
-    });
-  });
-  return freeCell;
-}
-
-async function saveBoard(board: BoardInterface) {
-  const boardDocument = await firebase
-    .firestore()
-    .collection("boards")
-    .doc("default");
-
-  await boardDocument.update(board);
-}
-
 function findUser(board: BoardInterface, userId: string) {
   let position: BoardCoordinate | undefined;
   board.rows.forEach((row, i) => {
@@ -61,12 +16,48 @@ function findUser(board: BoardInterface, userId: string) {
   return position;
 }
 
+function setUserOnBoard(board: BoardInterface, userId: string, newPosition: BoardCoordinate) {
+  if (findUser(board, userId)) {
+    return board;
+  }
+
+  const newBoardState: BoardInterface = {
+    rows: board.rows.map((row, i) => ({
+      cells: row.cells.map((cell, j) => {
+        if (cell.userId !== '' && cell.userId !== userId) {
+          return cell;
+        }
+        return {
+          userId: i === newPosition.y && j === newPosition.x ? userId : ''
+        };
+      })
+    }))
+  };
+  return newBoardState;
+}
+
+function findFreeCell(board: BoardInterface) {
+  let freeCell: BoardCoordinate | undefined;
+  board.rows.forEach((row, y) => {
+    row.cells.forEach((cell, x) => {
+      if (cell.userId === '') {
+        freeCell = { x, y };
+      }
+    });
+  });
+  return freeCell;
+}
+
+async function saveBoard(board: BoardInterface) {
+  const boardDocument = await firebase.firestore().collection('boards').doc('default');
+
+  await boardDocument.update(board);
+}
+
 // Public Functions
-export async function registerBoardUpdateListener(
-  callback: (board: BoardInterface) => void
-) {
-  const board = await firebase.firestore().collection("boards").doc("default");
-  board.onSnapshot((doc) => {
+export async function registerBoardUpdateListener(callback: (board: BoardInterface) => void) {
+  const board = await firebase.firestore().collection('boards').doc('default');
+  board.onSnapshot(doc => {
     const data = doc.data();
     if (data) {
       callback(data as BoardInterface);
@@ -74,13 +65,10 @@ export async function registerBoardUpdateListener(
   });
 }
 
-export async function placeNewPlayerOnBoard(
-  board: BoardInterface,
-  userId: string
-) {
+export async function placeNewPlayerOnBoard(board: BoardInterface, userId: string) {
   let freeCell = findFreeCell(board);
   if (!freeCell) {
-    console.log("No free cell found..?!");
+    console.log('No free cell found..?!');
     return;
   }
   const newBoard = setUserOnBoard(board, userId, freeCell);
@@ -93,18 +81,14 @@ export async function resetBoard() {
     newState.rows[i] = { cells: [] };
     for (let j = 0; j < gridSize; j++) {
       newState.rows[i].cells[j] = {
-        userId: "",
+        userId: ''
       };
     }
   }
   await saveBoard(newState);
 }
 
-export async function moveUser(
-  board: BoardInterface,
-  direction: MoveDirection,
-  userId: string
-) {
+export async function moveUser(board: BoardInterface, direction: MoveDirection, userId: string) {
   const position = findUser(board, userId);
 
   console.log(board);
@@ -128,12 +112,7 @@ export async function moveUser(
         newPosition.x++;
         break;
     }
-    if (
-      newPosition.x < 0 ||
-      newPosition.x >= gridSize ||
-      newPosition.y < 0 ||
-      newPosition.y >= gridSize
-    ) {
+    if (newPosition.x < 0 || newPosition.x >= gridSize || newPosition.y < 0 || newPosition.y >= gridSize) {
       newPosition = { ...position };
     }
 

@@ -1,20 +1,20 @@
-import React from "react";
-import { Box } from "@material-ui/core";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import React from 'react';
+import { Box } from '@material-ui/core';
+import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 
-import Tile from "./Tile";
-import { gridSize, tileSize } from "../common/generalVariables";
-import { BoardInterface, PlayerDataStore } from "../common/interfaces";
+import Tile from './Tile';
+import { gridSize, tileSize } from '../common/generalVariables';
+import { BoardInterface, PlayerDataStore } from '../common/interfaces';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: "grid",
+      display: 'grid',
       gridTemplateColumns: `repeat(${gridSize}, ${tileSize}px)`,
       gridTemplateRows: `repeat(${gridSize}, ${tileSize}px)`,
-      overflow: "hidden",
-      margin: "auto",
-    },
+      overflow: 'hidden',
+      margin: 'auto'
+    }
   })
 );
 
@@ -28,11 +28,7 @@ function Grid({ board, playerData }: GridProps) {
 
   return (
     <Box className={classes.root}>
-      {board.rows.map((row, i) =>
-        row.cells.map(({ userId }, j) => (
-          <Tile key={`${i},${j}`} userId={userId} playerData={playerData} />
-        ))
-      )}
+      {board.rows.map((row, i) => row.cells.map(({ userId }, j) => <Tile key={`${i},${j}`} userId={userId} playerData={playerData} />))}
     </Box>
   );
 }
