@@ -9,9 +9,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       border: 'solid 1px black',
+      borderTopWidth: 0,
+      borderLeftWidth: 0,
       width: tileSize,
       height: tileSize,
-      overflow: 'hidden'
+      overflow: 'hidden',
+      boxSizing: 'border-box'
     }
   })
 );

@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'grid',
+      border: "solid 1px black",
+      borderBottomWidth: 0,
+      borderRightWidth: 0,
       gridTemplateColumns: `repeat(${gridSize}, ${tileSize}px)`,
       gridTemplateRows: `repeat(${gridSize}, ${tileSize}px)`,
       overflow: 'hidden',

@@ -9,6 +9,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import firebase from 'firebase/app';
+import 'firebase/functions';
 import 'firebase/auth';
 import 'firebase/firestore';
 
@@ -53,9 +54,13 @@ const Controls = ({ board, user }: ControlsProps) => {
     await placeNewPlayerOnBoard(board, user.uid);
   };
 
-  const onClickMove = async (direction: MoveDirection) => {
-    moveUser(board, direction, user.uid);
+  const onClickMove = (direction: MoveDirection) => {
+    // moveUser(board, direction, user.uid);
+    const f = firebase.functions();
+    const callable = f.httpsCallable('movePlayer');
+    callable({direction});
   };
+
   return (
     <Box className={classes.controls}>
       <Box className={classes.outer_col}>

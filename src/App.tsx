@@ -47,8 +47,10 @@ function App() {
       const resp = await callable();
       console.log({ resp });
     }
-    test();
-  }, []);
+    if (user) {
+      test();
+    }
+  }, [user]);
 
   useEffect(() => {
     playerApi.registerPlayerStoreUpdateListener(playerDataStore => {
