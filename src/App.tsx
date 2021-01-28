@@ -3,6 +3,7 @@ import { Box, ThemeProvider } from '@material-ui/core';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/functions';
 import 'firebase/firestore';
 
 import theme from './common/theme';
@@ -37,6 +38,16 @@ function App() {
     firebase.auth().onAuthStateChanged(newUser => {
       setUser(newUser);
     });
+  }, []);
+
+  useEffect(() => {
+    async function test() {
+      const f = firebase.functions();
+      const callable = f.httpsCallable('addPlayerToBoard');
+      const resp = await callable();
+      console.log({ resp });
+    }
+    test();
   }, []);
 
   useEffect(() => {
