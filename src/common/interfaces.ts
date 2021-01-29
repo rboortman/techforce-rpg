@@ -15,10 +15,10 @@ export interface BoardCoordinate {
 }
 
 export enum MoveDirection {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT
+  UP = 'up',
+  DOWN = 'down',
+  LEFT = 'left',
+  RIGHT = 'right'
 }
 
 export interface Player {

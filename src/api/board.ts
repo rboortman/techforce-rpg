@@ -3,14 +3,10 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/functions';
 
+import { callRemoteFunction } from './firebase';
 import { BoardInterface, MoveDirection } from '../common/interfaces';
 
 // Private functions
-async function callRemoteFunction(functionId: string, data?: any) {
-  const remoteFunction = firebase.functions();
-  const callable = remoteFunction.httpsCallable(functionId);
-  return await callable(data);
-}
 
 // Public Functions
 export async function registerBoardUpdateListener(callback: (board: BoardInterface) => void) {

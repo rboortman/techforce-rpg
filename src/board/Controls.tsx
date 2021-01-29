@@ -15,6 +15,7 @@ import 'firebase/firestore';
 
 import { BoardInterface, MoveDirection, Player } from '../common/interfaces';
 import { moveUser, resetBoard } from '../api/board';
+import { attack } from '../api/player';
 
 const useStyles = makeStyles(theme => ({
   controls: {
@@ -57,6 +58,7 @@ const Controls = ({ board, user }: ControlsProps) => {
 
   const dealDamage = () => {
     console.log('Attacking!');
+    attack();
   };
 
   return (

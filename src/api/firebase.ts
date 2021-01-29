@@ -13,3 +13,9 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
+export async function callRemoteFunction(functionId: string, data?: any) {
+  const remoteFunction = firebase.functions();
+  const callable = remoteFunction.httpsCallable(functionId);
+  return await callable(data);
+}

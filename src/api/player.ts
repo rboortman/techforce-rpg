@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
+import { callRemoteFunction } from './firebase';
 import { Player, PlayerDataStore } from '../common/interfaces';
 
 // Private functions
@@ -42,4 +43,8 @@ export async function registerPlayerStoreUpdateListener(listener: (playerDataSto
       });
       listener(newPlayerDataStore);
     });
+}
+
+export async function attack() {
+  callRemoteFunction('attack');
 }
