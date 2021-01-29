@@ -13,8 +13,8 @@ import 'firebase/functions';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-import { BoardInterface, MoveDirection } from '../common/interfaces';
-import { moveUser, placeNewPlayerOnBoard, resetBoard } from '../api/board';
+import { BoardInterface, MoveDirection, Player } from '../common/interfaces';
+import { moveUser, resetBoard } from '../api/board';
 
 const useStyles = makeStyles(theme => ({
   controls: {
@@ -41,31 +41,28 @@ const useStyles = makeStyles(theme => ({
 interface ControlsProps {
   board: BoardInterface;
   user: firebase.User;
+  player?: Player;
 }
 
 const Controls = ({ board, user }: ControlsProps) => {
   const classes = useStyles();
 
-  const onClickResetBoard = async () => {
-    await resetBoard();
-  };
-
-  const onClickStart = async () => {
-    await placeNewPlayerOnBoard(board, user.uid);
+  const onClickResetBoard = () => {
+    resetBoard();
   };
 
   const onClickMove = (direction: MoveDirection) => {
-    // moveUser(board, direction, user.uid);
-    const f = firebase.functions();
-    const callable = f.httpsCallable('movePlayer');
-    callable({direction});
+    moveUser(direction);
+  };
+
+  const dealDamage = () => {
+    console.log('Attacking!');
   };
 
   return (
     <Box className={classes.controls}>
       <Box className={classes.outer_col}>
         <Box className={classes.left_row}>
-          <Button onClick={onClickStart}>Start</Button>
           <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.LEFT)}>
             <KeyboardArrowLeft />
           </IconButton>
@@ -85,6 +82,7 @@ const Controls = ({ board, user }: ControlsProps) => {
             <KeyboardArrowRight />
           </IconButton>
           <Button onClick={onClickResetBoard}>Reset board</Button>
+          <Button onClick={dealDamage}>Attack!</Button>
         </Box>
       </Box>
     </Box>

@@ -9,6 +9,7 @@ import firebase from 'firebase/app';
 import UserDialog from './UserDialog';
 import { LogoutButton } from './LogoutButton';
 import { LoginButton } from './LoginButton';
+import { Player } from '../common/interfaces';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,10 +24,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AppBarProps {
-  user: firebase.User | null;
+  user?: firebase.User;
+  player?: Player;
 }
 
-const AppBarComponent = ({ user }: AppBarProps) => {
+const AppBarComponent = ({ user, player }: AppBarProps) => {
   const classes = useStyles();
 
   return (
@@ -35,7 +37,7 @@ const AppBarComponent = ({ user }: AppBarProps) => {
         <Typography variant="h6" className={classes.title}>
           TECHFORCE RPG
         </Typography>
-        <UserDialog user={user} />
+        {user && player ? <UserDialog user={user} player={player} /> : null}
         {user && <LogoutButton />}
         {!user && <LoginButton />}
       </Toolbar>

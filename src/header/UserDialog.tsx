@@ -8,18 +8,23 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
+import TextField from '@material-ui/core/TextField';
 import Face from '@material-ui/icons/Face';
 
 import firebase from 'firebase/app';
 
 import ColorPicker from '../common/ColorPicker';
 import { updatePlayer } from '../api/player';
+import { Player } from '../common/interfaces';
+import { resetBoard } from '../api/board';
 
 interface UserDialogProps {
-  user: firebase.User | null;
+  user: firebase.User;
+  player: Player;
 }
 
-export default function UserDialog({ user }: UserDialogProps) {
+export default function UserDialog({ user, player }: UserDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [color, setColor] = React.useState('#2196f3');
   const theme = useTheme();
@@ -33,7 +38,9 @@ export default function UserDialog({ user }: UserDialogProps) {
     setOpen(false);
   };
 
-  if (!user) return null;
+  const changeGridSize = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    resetBoard(Number(event.target.value));
+  };
 
   return (
     <div>
@@ -52,6 +59,11 @@ export default function UserDialog({ user }: UserDialogProps) {
               updatePlayer({ id: user.uid, color: value });
             }}
           />
+          {player.isAdmin ? (
+            <Box mt={2}>
+              <TextField label="Grid size" type="number" onBlur={changeGridSize} />
+            </Box>
+          ) : null}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" autoFocus>

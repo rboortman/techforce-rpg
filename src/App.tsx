@@ -9,61 +9,44 @@ import 'firebase/firestore';
 import theme from './common/theme';
 
 import './api/firebase';
-import * as boardApi from './api/board';
-import * as playerApi from './api/player';
 
 import Grid from './board/Grid';
 import AppBar from './header/AppBar';
 import Controls from './board/Controls';
-import { ActionInterface, BoardInterface, PlayerDataStore } from './common/interfaces';
+import { BoardInterface, PlayerDataStore } from './common/interfaces';
+import { placeNewPlayerOnBoard, registerBoardUpdateListener } from './api/board';
+import { registerPlayerStoreUpdateListener } from './api/player';
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
-function reducer(state: BoardInterface, action: ActionInterface) {
-  switch (action.type) {
-    case 'update':
-      return action.payload.board;
-
-    default:
-      return state;
-  }
-}
-
 function App() {
-  const [user, setUser] = useState<null | firebase.User>(null);
+  const [user, setUser] = useState<undefined | firebase.User>(undefined);
   const [playerDataStore, setPlayerDataStore] = useState<PlayerDataStore>({});
-  const [board, boardDispatcher] = useReducer(reducer, initialState);
+  const [board, setBoard] = useState<BoardInterface>(initialState);
+
+  const player = user && playerDataStore[user.uid];
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(newUser => {
-      setUser(newUser);
+      setUser(newUser || undefined);
     });
   }, []);
 
   useEffect(() => {
-    async function test() {
-      const f = firebase.functions();
-      const callable = f.httpsCallable('addPlayerToBoard');
-      const resp = await callable();
-      console.log({ resp });
-    }
     if (user) {
-      test();
+      placeNewPlayerOnBoard();
     }
   }, [user]);
 
   useEffect(() => {
-    playerApi.registerPlayerStoreUpdateListener(playerDataStore => {
+    registerPlayerStoreUpdateListener(playerDataStore => {
       setPlayerDataStore(playerDataStore);
     });
   }, []);
 
   useEffect(() => {
-    boardApi.registerBoardUpdateListener(board => {
-      boardDispatcher({
-        type: 'update',
-        payload: { board }
-      });
+    registerBoardUpdateListener(board => {
+      setBoard(board);
     });
   }, []);
 
@@ -71,12 +54,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <Box className="root">
         <Box className="top">
-          <AppBar user={user} />
+          <AppBar user={user} player={player} />
         </Box>
         <Box display="flex" className="center" m={1}>
           <Grid playerData={playerDataStore} board={board} />
         </Box>
-        <Box className="bottom">{user && <Controls board={board} user={user} />}</Box>
+        <Box className="bottom">{user && <Controls board={board} user={user} player={player} />}</Box>
       </Box>
     </ThemeProvider>
   );

@@ -1,14 +1,6 @@
 export interface TileConfig {
   userId: string;
 }
-interface UpdateActionInterface {
-  type: 'update';
-  payload: {
-    board: BoardInterface;
-  };
-}
-
-export type ActionInterface = UpdateActionInterface;
 
 type Row = {
   cells: TileConfig[];
@@ -32,6 +24,7 @@ export enum MoveDirection {
 export interface Player {
   id: string;
   color: string;
+  isAdmin?: boolean;
 }
 
 export interface PlayerDataStore {
