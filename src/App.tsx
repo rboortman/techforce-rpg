@@ -33,10 +33,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    function isPlayerOnBoard() {
+      return board.rows.some(row => row.cells.some(cell => cell.userId === user?.uid));
+    }
+
+    if (user && playerDataStore.hasOwnProperty(user.uid) && !isPlayerOnBoard()) {
       placeNewPlayerOnBoard();
     }
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, playerDataStore]);
 
   useEffect(() => {
     registerPlayerStoreUpdateListener(playerDataStore => {
