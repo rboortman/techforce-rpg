@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
@@ -45,46 +45,67 @@ interface ControlsProps {
   player?: Player;
 }
 
-const Controls = ({ board, user }: ControlsProps) => {
+const Controls = ({ board, user, player }: ControlsProps) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const classes = useStyles();
 
-  const onClickResetBoard = () => {
-    resetBoard();
-  };
+  async function onClickResetBoard() {
+    setLoading(true);
+    try {
+      await resetBoard();
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const onClickMove = (direction: MoveDirection) => {
-    moveUser(direction);
-  };
+  async function onClickMove(direction: MoveDirection) {
+    setLoading(true);
+    try {
+      await moveUser(direction);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const dealDamage = () => {
-    console.log('Attacking!');
-    attack();
-  };
+  async function dealDamage() {
+    setLoading(true);
+    try {
+      await attack();
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Box className={classes.controls}>
       <Box className={classes.outer_col}>
         <Box className={classes.left_row}>
-          <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.LEFT)}>
+          <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.LEFT)}>
             <KeyboardArrowLeft />
           </IconButton>
         </Box>
       </Box>
       <Box className={classes.middle_col}>
-        <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.UP)}>
+        <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.UP)}>
           <KeyboardArrowUp />
         </IconButton>
-        <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.DOWN)}>
+        <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.DOWN)}>
           <KeyboardArrowDown />
         </IconButton>
       </Box>
       <Box className={classes.outer_col}>
         <Box className={classes.right_row}>
-          <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.RIGHT)}>
+          <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.RIGHT)}>
             <KeyboardArrowRight />
           </IconButton>
-          <Button onClick={onClickResetBoard}>Reset board</Button>
-          <Button onClick={dealDamage}>Attack!</Button>
+          {player?.isAdmin ? (
+            <Button disabled={loading} onClick={onClickResetBoard}>
+              Reset board
+            </Button>
+          ) : null}
+          <Button disabled={loading} onClick={dealDamage}>
+            Attack!
+          </Button>
         </Box>
       </Box>
     </Box>

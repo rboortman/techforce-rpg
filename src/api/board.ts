@@ -20,13 +20,13 @@ export async function registerBoardUpdateListener(callback: (board: BoardInterfa
 }
 
 export async function placeNewPlayerOnBoard() {
-  callRemoteFunction('getOnBoard');
+  await callRemoteFunction('getOnBoard');
 }
 
 export async function moveUser(direction: MoveDirection) {
-  callRemoteFunction('move', { direction });
+  await callRemoteFunction('move', { direction });
 }
 
 export async function resetBoard(gridSize?: number) {
-  callRemoteFunction('resetBoard', { gridSize });
+  await callRemoteFunction('resetBoard', { gridSize });
 }

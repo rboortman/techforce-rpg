@@ -46,5 +46,5 @@ export async function registerPlayerStoreUpdateListener(listener: (playerDataSto
 }
 
 export async function attack() {
-  callRemoteFunction('attack');
+  await callRemoteFunction('attack');
 }
