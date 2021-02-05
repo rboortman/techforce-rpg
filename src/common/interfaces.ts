@@ -31,8 +31,6 @@ export interface PartialPlayer {
   id?: string;
   color?: string;
   isAdmin?: boolean;
-
-  range?: number;
 }
 
 export interface PlayerDataStore {
