@@ -27,6 +27,14 @@ export interface Player {
   isAdmin?: boolean;
 }
 
+export interface PartialPlayer {
+  id?: string;
+  color?: string;
+  isAdmin?: boolean;
+
+  range?: number;
+}
+
 export interface PlayerDataStore {
   [key: string]: Player;
 }

@@ -24,7 +24,7 @@ interface GridProps {
   playerData: PlayerDataStore;
 }
 
-function Grid({ board, playerData }: GridProps) {
+export default function Grid({ board, playerData }: GridProps) {
   const classes = useStyles();
   const gridSize = board.rows.length;
 
@@ -34,5 +34,3 @@ function Grid({ board, playerData }: GridProps) {
     </Box>
   );
 }
-
-export default Grid;

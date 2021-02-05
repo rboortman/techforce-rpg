@@ -4,11 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-import firebase from 'firebase/app';
-
 import UserDialog from './UserDialog';
-import { LogoutButton } from './LogoutButton';
-import { LoginButton } from './LoginButton';
 import { Player } from '../common/interfaces';
 
 const useStyles = makeStyles(theme => ({
@@ -24,11 +20,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AppBarProps {
-  user?: firebase.User;
   player?: Player;
 }
 
-const AppBarComponent = ({ user, player }: AppBarProps) => {
+export default function AppBarComponent({ player }: AppBarProps) {
   const classes = useStyles();
 
   return (
@@ -37,12 +32,8 @@ const AppBarComponent = ({ user, player }: AppBarProps) => {
         <Typography variant="h6" className={classes.title}>
           TECHFORCE RPG
         </Typography>
-        {user && player ? <UserDialog user={user} player={player} /> : null}
-        {user && <LogoutButton />}
-        {!user && <LoginButton />}
+        {player && player ? <UserDialog player={player} /> : null}
       </Toolbar>
     </AppBar>
   );
-};
-
-export default AppBarComponent;
+}

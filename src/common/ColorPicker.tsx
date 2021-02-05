@@ -33,7 +33,7 @@ function breakdownColor(color: string) {
   return result;
 }
 
-function ColorPicker({ onChange, color }: ColorPickerProps) {
+export default function ColorPicker({ onChange, color }: ColorPickerProps) {
   const { hue, shade } = breakdownColor(color);
 
   return (
@@ -75,5 +75,3 @@ function ColorPicker({ onChange, color }: ColorPickerProps) {
     </Box>
   );
 }
-
-export default ColorPicker;

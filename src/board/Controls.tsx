@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,15 +8,8 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import firebase from 'firebase/app';
-import 'firebase/functions';
-import 'firebase/auth';
-import 'firebase/firestore';
-
 import { BoardInterface, MoveDirection, Player } from '../common/interfaces';
-import { moveUser, resetBoard } from '../api/board';
-import { attack } from '../api/player';
-import { move } from '../api/game';
+import { attack, move, resetBoard } from '../api/game';
 
 const useStyles = makeStyles(theme => ({
   controls: {
@@ -42,75 +35,50 @@ const useStyles = makeStyles(theme => ({
 
 interface ControlsProps {
   board: BoardInterface;
-  user: firebase.User;
   player?: Player;
 }
 
-const Controls = ({ board, user, player }: ControlsProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
+export default function Controls({ board, player }: ControlsProps) {
   const classes = useStyles();
 
-  async function onClickResetBoard() {
-    setLoading(true);
-    try {
-      await resetBoard();
-    } finally {
-      setLoading(false);
-    }
+  function onClickResetBoard() {
+    resetBoard();
   }
 
-  async function onClickMove(direction: MoveDirection) {
-    setLoading(true);
-    try {
-      move(direction, 1);
-    } finally {
-      setLoading(false);
-    }
+  function onClickMove(direction: MoveDirection) {
+    move(direction);
   }
 
   async function dealDamage() {
-    setLoading(true);
-    try {
-      await attack();
-    } finally {
-      setLoading(false);
-    }
+    attack();
   }
 
   return (
     <Box className={classes.controls}>
       <Box className={classes.outer_col}>
         <Box className={classes.left_row}>
-          <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.LEFT)}>
+          <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.LEFT)}>
             <KeyboardArrowLeft />
           </IconButton>
         </Box>
       </Box>
       <Box className={classes.middle_col}>
-        <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.UP)}>
+        <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.UP)}>
           <KeyboardArrowUp />
         </IconButton>
-        <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.DOWN)}>
+        <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.DOWN)}>
           <KeyboardArrowDown />
         </IconButton>
       </Box>
       <Box className={classes.outer_col}>
         <Box className={classes.right_row}>
-          <IconButton disabled={loading} edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.RIGHT)}>
+          <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.RIGHT)}>
             <KeyboardArrowRight />
           </IconButton>
-          {player?.isAdmin ? (
-            <Button disabled={loading} onClick={onClickResetBoard}>
-              Reset board
-            </Button>
-          ) : null}
-          <Button disabled={loading} onClick={dealDamage}>
-            Attack!
-          </Button>
+          {player?.isAdmin ? <Button onClick={onClickResetBoard}>Reset board</Button> : null}
+          <Button onClick={dealDamage}>Attack!</Button>
         </Box>
       </Box>
     </Box>
   );
-};
-
-export default Controls;
+}

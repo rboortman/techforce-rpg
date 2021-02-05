@@ -12,19 +12,15 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Face from '@material-ui/icons/Face';
 
-import firebase from 'firebase/app';
-
 import ColorPicker from '../common/ColorPicker';
-import { updatePlayer } from '../api/player';
 import { Player } from '../common/interfaces';
-import { resetBoard } from '../api/board';
+import { resetBoard, updatePlayer } from '../api/game';
 
 interface UserDialogProps {
-  user: firebase.User;
   player: Player;
 }
 
-export default function UserDialog({ user, player }: UserDialogProps) {
+export default function UserDialog({ player }: UserDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [color, setColor] = React.useState('#2196f3');
   const theme = useTheme();
@@ -56,7 +52,7 @@ export default function UserDialog({ user, player }: UserDialogProps) {
             color={color}
             onChange={value => {
               setColor(value);
-              updatePlayer({ id: user.uid, color: value });
+              updatePlayer({ ...player, color: value });
             }}
           />
           {player.isAdmin ? (
