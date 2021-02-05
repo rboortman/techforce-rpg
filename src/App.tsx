@@ -16,6 +16,8 @@ import Controls from './board/Controls';
 import { BoardInterface, PlayerDataStore } from './common/interfaces';
 import { placeNewPlayerOnBoard, registerBoardUpdateListener } from './api/board';
 import { registerPlayerStoreUpdateListener } from './api/player';
+import { connect } from 'socket.io-client';
+import { joinGame, subscribeToBoard } from './api/game';
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
@@ -37,9 +39,9 @@ function App() {
       return board.rows.some(row => row.cells.some(cell => cell.userId === user?.uid));
     }
 
-    if (user && playerDataStore.hasOwnProperty(user.uid) && !isPlayerOnBoard()) {
-      placeNewPlayerOnBoard();
-    }
+    // if (user && playerDataStore.hasOwnProperty(user.uid) && !isPlayerOnBoard()) {
+    //   placeNewPlayerOnBoard();
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, playerDataStore]);
 
@@ -50,10 +52,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    registerBoardUpdateListener(board => {
+    subscribeToBoard(board => {
       setBoard(board);
     });
   }, []);
+
+  useEffect(() => {
+    joinGame(user?.uid || '');
+  }, [user]);
 
   return (
     <ThemeProvider theme={theme}>

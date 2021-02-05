@@ -16,6 +16,7 @@ import 'firebase/firestore';
 import { BoardInterface, MoveDirection, Player } from '../common/interfaces';
 import { moveUser, resetBoard } from '../api/board';
 import { attack } from '../api/player';
+import { move } from '../api/game';
 
 const useStyles = makeStyles(theme => ({
   controls: {
@@ -61,7 +62,7 @@ const Controls = ({ board, user, player }: ControlsProps) => {
   async function onClickMove(direction: MoveDirection) {
     setLoading(true);
     try {
-      await moveUser(direction);
+      move(direction, 1);
     } finally {
       setLoading(false);
     }

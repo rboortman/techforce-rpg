@@ -27,7 +27,7 @@ interface TileProps {
 function Tile({ userId, playerData }: TileProps) {
   const classes = useStyles();
 
-  return <Box className={classes.root} bgcolor={userId ? playerData[userId].color : 'white'} />;
+  return <Box className={classes.root} bgcolor={userId ? playerData[userId]?.color : 'white'} />;
 }
 
 export default Tile;
