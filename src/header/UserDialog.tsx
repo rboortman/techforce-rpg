@@ -26,17 +26,21 @@ export default function UserDialog({ player }: UserDialogProps) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleClickOpen = () => {
+  function handleClickOpen() {
     setOpen(true);
-  };
+  }
 
-  const handleClose = () => {
+  function handleClose() {
     setOpen(false);
-  };
+  }
 
-  const changeGridSize = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  function changeUserName(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    updatePlayer({ name: event.target.value });
+  }
+
+  function changeGridSize(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     resetBoard(Number(event.target.value));
-  };
+  }
 
   return (
     <div>
@@ -47,7 +51,9 @@ export default function UserDialog({ player }: UserDialogProps) {
         <DialogTitle id="responsive-dialog-title">{'User settings'}</DialogTitle>
         <DialogContent>
           <DialogContentText>Here you can change some user settings</DialogContentText>
-          <DialogContentText>Your color: {color}</DialogContentText>
+          <Box mb={2}>
+            <TextField defaultValue={player.name} label="Name" onBlur={changeUserName} />
+          </Box>
           <ColorPicker
             color={color}
             onChange={value => {
@@ -55,6 +61,7 @@ export default function UserDialog({ player }: UserDialogProps) {
               updatePlayer({ ...player, color: value });
             }}
           />
+          <DialogContentText>Your color: {color}</DialogContentText>
           {player.isAdmin ? (
             <Box mt={2}>
               <TextField label="Grid size" type="number" onBlur={changeGridSize} />
