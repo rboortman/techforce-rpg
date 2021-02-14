@@ -30,7 +30,9 @@ export default function Grid({ board, playerData }: GridProps) {
 
   return (
     <Box className={classes.root} gridTemplateColumns={`repeat(${gridSize}, ${tileSize}px)`} gridTemplateRows={`repeat(${gridSize}, ${tileSize}px)`}>
-      {board.rows.map((row, i) => row.cells.map(({ userId }, j) => <Tile key={`${i},${j}`} userId={userId} playerData={playerData} />))}
+      {board.rows.map((row, i) => row.cells.map((tileConfig, j) => 
+        <Tile key={`${i},${j}`} tileConfig={tileConfig} playerData={playerData} />
+      ))}
     </Box>
   );
 }

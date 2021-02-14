@@ -8,6 +8,7 @@ import AppBar from './header/AppBar';
 import Controls from './board/Controls';
 import { BoardInterface, Player, PlayerDataStore } from './common/interfaces';
 import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown } from './api/game';
+import PlayerInfo from './board/PlayerInfo';
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
@@ -59,7 +60,10 @@ export default function App() {
         <Box display="flex" className="center" m={1}>
           <Grid playerData={playerDataStore} board={board} />
         </Box>
-        <Box className="bottom">{player && <Controls board={board} player={player} />}</Box>
+        <Box className="bottom">
+          {player && <Controls board={board} player={player} />}
+          <PlayerInfo playerStore={playerDataStore}/>
+        </Box>
       </Box>
     </ThemeProvider>
   );
