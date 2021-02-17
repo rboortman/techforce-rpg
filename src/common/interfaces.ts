@@ -1,6 +1,7 @@
 interface AttackConfig {
   attackingUntil: Date;
   damage: number;
+  userId: string;
 }
 
 export interface TileConfig {
