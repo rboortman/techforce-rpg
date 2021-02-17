@@ -4,8 +4,13 @@ interface AttackConfig {
   userId: string;
 }
 
+enum Obstacles {
+  ROCK = 'rock'
+}
+
 export interface TileConfig {
   userId: string;
+  obstacle: Obstacles | null;
   attacks: AttackConfig[];
 }
 

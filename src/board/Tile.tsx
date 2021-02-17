@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import grey from '@material-ui/core/colors/grey';
 
 import { tileSize } from '../common/generalVariables';
 import { PlayerDataStore, TileConfig } from '../common/interfaces';
@@ -26,9 +27,12 @@ interface TileProps {
 
 export default function Tile({ tileConfig, playerData }: TileProps) {
   const classes = useStyles();
+  let backgroundColor: string = grey[50];
+  if (tileConfig.obstacle) backgroundColor = grey[700];
+  if (tileConfig.userId) backgroundColor = playerData[tileConfig.userId]?.color;
 
   return (
-    <Box className={classes.root} bgcolor={tileConfig.userId ? playerData[tileConfig.userId]?.color : 'white'}>
+    <Box className={classes.root} bgcolor={backgroundColor}>
       {tileConfig.attacks.length ? 'F' : ''}
     </Box>
   );
