@@ -1,7 +1,11 @@
+interface AttackConfig {
+  attackingUntil: Date;
+  damage: number;
+}
+
 export interface TileConfig {
   userId: string;
-  attackingUntil: Date | null;
-  damage: number;
+  attacks: AttackConfig[];
 }
 
 type Row = {

@@ -29,7 +29,7 @@ export default function Tile({ tileConfig, playerData }: TileProps) {
 
   return (
     <Box className={classes.root} bgcolor={tileConfig.userId ? playerData[tileConfig.userId]?.color : 'white'}>
-       {tileConfig.attackingUntil ? 'F' : ''}
+      {tileConfig.attacks.length ? 'F' : ''}
     </Box>
   );
 }
