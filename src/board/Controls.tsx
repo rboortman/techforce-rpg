@@ -1,113 +1,83 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import KeyboardArrowUp from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import { MoveDirection, Player } from '../common/interfaces';
+import { attack, move, resetBoard } from '../api/game';
 
-import {
-  BoardInterface,
-  MoveDirection,
-} from "../common/interfaces";
-import * as api from "../api/board";
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   controls: {
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center'
   },
   outer_col: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
   },
   middle_col: {
-    display: "flex",
-    flexDirection: "column",
-    // justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'column'
   },
   left_row: {
-    display: "flex",
+    display: 'flex'
   },
   right_row: {
-    display: "flex",
-  },
+    display: 'flex'
+  }
 }));
 
 interface ControlsProps {
-  board: BoardInterface;
-  user: firebase.User;
+  player?: Player;
 }
 
-const Controls = ({ board, user }: ControlsProps) => {
+export default function Controls({ player }: ControlsProps) {
   const classes = useStyles();
 
-  const onClickResetBoard = async () => {
-    await api.resetBoard();
-  };
+  function onClickResetBoard() {
+    resetBoard();
+  }
 
-  const onClickStart = async () => {
-    await api.placeNewPlayerOnBoard(board, user.uid);
-  };
+  function onClickMove(direction: MoveDirection) {
+    move(direction);
+  }
 
-  const onClickMove = async (direction: MoveDirection) => {
-    api.moveUser(board, direction, user.uid);
-  };
+  async function dealDamage() {
+    attack();
+  }
+
   return (
     <Box className={classes.controls}>
       <Box className={classes.outer_col}>
         <Box className={classes.left_row}>
-          <Button onClick={onClickStart}>Start</Button>
-          <IconButton
-            edge="start"
-            color="primary"
-            aria-label="menu"
-            onClick={() => onClickMove(MoveDirection.LEFT)}
-          >
+          <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.LEFT)}>
             <KeyboardArrowLeft />
           </IconButton>
         </Box>
       </Box>
       <Box className={classes.middle_col}>
-        <IconButton
-          edge="start"
-          color="primary"
-          aria-label="menu"
-          onClick={() => onClickMove(MoveDirection.UP)}
-        >
+        <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.UP)}>
           <KeyboardArrowUp />
         </IconButton>
-        <IconButton
-          edge="start"
-          color="primary"
-          aria-label="menu"
-          onClick={() => onClickMove(MoveDirection.DOWN)}
-        >
+        <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.DOWN)}>
           <KeyboardArrowDown />
         </IconButton>
       </Box>
       <Box className={classes.outer_col}>
         <Box className={classes.right_row}>
-          <IconButton
-            edge="start"
-            color="primary"
-            aria-label="menu"
-            onClick={() => onClickMove(MoveDirection.RIGHT)}
-          >
+          <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.RIGHT)}>
             <KeyboardArrowRight />
           </IconButton>
-          <Button onClick={onClickResetBoard}>Reset board</Button>
+          {player?.isAdmin ? <Button onClick={onClickResetBoard}>Reset board</Button> : null}
+          <Button onClick={dealDamage}>Attack!</Button>
         </Box>
       </Box>
     </Box>
   );
-};
-
-export default Controls;
+}

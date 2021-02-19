@@ -1,9 +1,9 @@
-import React from "react";
-import Box from "@material-ui/core/Box";
-import Slider from "@material-ui/core/Slider";
-import Typography from "@material-ui/core/Typography";
-import CheckIcon from "@material-ui/icons/Check";
-import * as MuiColors from "@material-ui/core/colors";
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
+import CheckIcon from '@material-ui/icons/Check';
+import * as MuiColors from '@material-ui/core/colors';
 
 const temp = MuiColors as { [key: string]: { [key: string]: string } };
 
@@ -20,7 +20,7 @@ function valueLabelFormat(value: number) {
 }
 
 function breakdownColor(color: string) {
-  let result = { hue: "blue", shade: "500" };
+  let result = { hue: 'blue', shade: '500' };
   Object.entries(temp).some(([hue, shadeRow]) =>
     Object.entries(shadeRow).some(([shade, value]) => {
       if (color === value) {
@@ -33,7 +33,7 @@ function breakdownColor(color: string) {
   return result;
 }
 
-function ColorPicker({ onChange, color }: ColorPickerProps) {
+export default function ColorPicker({ onChange, color }: ColorPickerProps) {
   const { hue, shade } = breakdownColor(color);
 
   return (
@@ -46,24 +46,19 @@ function ColorPicker({ onChange, color }: ColorPickerProps) {
         max={shades.length - 1}
         getAriaValueText={valueLabelFormat}
         valueLabelFormat={valueLabelFormat}
-        // aria-labelledby="discrete-slider"
         onChange={(_, newValue: number | number[]) => {
-          if (typeof newValue === "number") {
+          if (typeof newValue === 'number') {
             onChange(temp[hue][shades[newValue]]);
           }
         }}
         valueLabelDisplay="auto"
       />
-      <Box
-        display="grid"
-        gridTemplateColumns="repeat(4, 48px)"
-        gridTemplateRows="repeat(5, 48px)"
-      >
-        {hues.map((h) => (
+      <Box display="grid" gridTemplateColumns="repeat(4, 48px)" gridTemplateRows="repeat(5, 48px)">
+        {hues.map(h => (
           <Box
             boxSizing="border-box"
             border="2px solid transparent"
-            borderColor={h === hue ? "white" : "transparent"}
+            borderColor={h === hue ? 'white' : 'transparent'}
             key={`${h}${shade}`}
             bgcolor={temp[h][shade]}
             onClick={() => onChange(temp[h][shade])}
@@ -79,5 +74,3 @@ function ColorPicker({ onChange, color }: ColorPickerProps) {
     </Box>
   );
 }
-
-export default ColorPicker;

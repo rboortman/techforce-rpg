@@ -1,14 +1,11 @@
-export interface TileConfig {
-  userId: string;
-}
-interface UpdateActionInterface {
-  type: "update";
-  payload: {
-    board: BoardInterface;
-  };
+enum Obstacles {
+  ROCK = 'rock'
 }
 
-export type ActionInterface = UpdateActionInterface;
+export interface TileConfig {
+  userId: string;
+  obstacle: Obstacles | null;
+}
 
 type Row = {
   cells: TileConfig[];
@@ -23,17 +20,35 @@ export interface BoardCoordinate {
 }
 
 export enum MoveDirection {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
+  UP = 'up',
+  DOWN = 'down',
+  LEFT = 'left',
+  RIGHT = 'right'
 }
 
 export interface Player {
   id: string;
+  name: string;
   color: string;
+  isAdmin?: boolean;
+
+  health: number;
+  attack: number;
+  speed: number;
+  range: number;
+}
+
+export interface PartialPlayer {
+  id?: string;
+  name?: string;
+  color?: string;
+  isAdmin?: boolean;
+  health?: number;
+  attack?: number;
+  speed?: number;
+  range?: number;
 }
 
 export interface PlayerDataStore {
-  [key: string]: Player
+  [key: string]: Player;
 }

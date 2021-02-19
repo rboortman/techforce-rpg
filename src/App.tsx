@@ -1,75 +1,70 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Box, ThemeProvider } from "@material-ui/core";
+import React, { useEffect, useState } from 'react';
+import { Box, ThemeProvider } from '@material-ui/core';
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import theme from './common/theme';
+import { BoardInterface, Player, PlayerDataStore } from './common/interfaces';
 
-import theme from "./common/theme";
-
-import "./api/firebase";
-import * as boardApi from "./api/board";
-import * as playerApi from "./api/player";
-
-
-import Grid from "./board/Grid";
-import AppBar from "./header/AppBar";
-import Controls from "./board/Controls";
-import { ActionInterface, BoardInterface, PlayerDataStore } from "./common/interfaces";
+import Grid from './board/Grid';
+import AppBar from './header/AppBar';
+import Controls from './board/Controls';
+import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown } from './api/game';
+import PlayerInfo from './board/PlayerInfo';
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
-function reducer(state: BoardInterface, action: ActionInterface) {
-  switch (action.type) {
-    case "update":
-      return action.payload.board;
-
-    default:
-      return state;
-  }
-}
-
-function App() {
-  const [user, setUser] = useState<null | firebase.User>(null);
+export default function App() {
+  const [playerId, setPlayerId] = useState<string>('');
   const [playerDataStore, setPlayerDataStore] = useState<PlayerDataStore>({});
-  const [board, boardDispatcher] = useReducer(reducer, initialState);
+  const [board, setBoard] = useState<BoardInterface>(initialState);
+
+  const player: Player | undefined = playerDataStore && playerDataStore[playerId];
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((newUser) => {
-      setUser(newUser);
+    subscribeToBoard(board => {
+      setBoard(board);
     });
+
+    subscribeToPlayers(players => {
+      setPlayerDataStore(players);
+    });
+
+    async function initialize() {
+      const player = await register();
+      console.log(player.id);
+      setPlayerId(player.id);
+    }
+
+    initialize();
+
+    return function () {
+      shutdown();
+    };
   }, []);
 
   useEffect(() => {
-    playerApi.registerPlayerStoreUpdateListener((playerDataStore) => {
-      setPlayerDataStore(playerDataStore);
-    });
-  }, []);
+    function isPlayerOnBoard() {
+      return board.rows.some(row => row.cells.some(cell => cell.userId === playerId));
+    }
 
-  useEffect(() => {
-    boardApi.registerBoardUpdateListener((board) => {
-      boardDispatcher({
-        type: "update",
-        payload: { board },
-      });
-    });
-  }, []);
+    if (playerId && !isPlayerOnBoard()) {
+      joinGame(playerId);
+    }
+  }, [board, playerId]);
 
   return (
     <ThemeProvider theme={theme}>
       <Box className="root">
         <Box className="top">
-          <AppBar user={user} />
+          <AppBar player={player} />
         </Box>
         <Box display="flex" className="center" m={1}>
           <Grid playerData={playerDataStore} board={board} />
         </Box>
         <Box className="bottom">
-          {user && <Controls board={board} user={user} />}
+          {player && <Controls player={player} />}
+          <PlayerInfo playerStore={playerDataStore} />
         </Box>
       </Box>
     </ThemeProvider>
   );
 }
-
-export default App;
