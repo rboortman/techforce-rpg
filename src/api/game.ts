@@ -1,55 +1,58 @@
-import { connect } from 'socket.io-client';
+// TODO: Connect to the server
+export {};
 
-import { BoardInterface, MoveDirection, PartialPlayer, Player, PlayerDataStore } from '../common/interfaces';
+// import { connect } from 'socket.io-client';
 
-const SERVER_URL = 'http://localhost:8080';
+// import { BoardInterface, MoveDirection, PartialPlayer, Player, PlayerDataStore } from '../common/interfaces';
 
-let socket = connect(SERVER_URL);
-socket.on('connect', () => {
-  console.log('joining game');
-});
+// const SERVER_URL = 'http://localhost:8080';
 
-export function register() {
-  return new Promise<Player>((resolve, reject) => {
-    try {
-      socket.emit('register', (player: Player) => {
-        resolve(player);
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
+// let socket = connect(SERVER_URL);
+// socket.on('connect', () => {
+//   console.log('joining game');
+// });
 
-export function joinGame(id: string) {
-  socket.emit('join game', id);
-}
+// export function register() {
+//   return new Promise<Player>((resolve, reject) => {
+//     try {
+//       socket.emit('register', (player: Player) => {
+//         resolve(player);
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
+// }
 
-export function move(direction: MoveDirection) {
-  socket.emit('move', direction);
-}
+// export function joinGame(id: string) {
+//   socket.emit('join game', id);
+// }
 
-export function attack() {
-  socket.emit('attack');
-}
+// export function move(direction: MoveDirection) {
+//   socket.emit('move', direction);
+// }
 
-export function updatePlayer(player: PartialPlayer) {
-  socket.emit('update player', player);
-}
+// export function attack() {
+//   socket.emit('attack');
+// }
 
-export function subscribeToBoard(callback: (board: BoardInterface) => void) {
-  socket.on('board', callback);
-}
+// export function updatePlayer(player: PartialPlayer) {
+//   socket.emit('update player', player);
+// }
 
-export function subscribeToPlayers(callback: (players: PlayerDataStore) => void) {
-  socket.on('players', callback);
-}
+// export function subscribeToBoard(callback: (board: BoardInterface) => void) {
+//   socket.on('board', callback);
+// }
 
-export function shutdown() {
-  socket.close();
-  socket = connect(SERVER_URL);
-}
+// export function subscribeToPlayers(callback: (players: PlayerDataStore) => void) {
+//   socket.on('players', callback);
+// }
 
-export function resetBoard(size?: number) {
-  socket.emit('reset board', size);
-}
+// export function shutdown() {
+//   socket.close();
+//   socket = connect(SERVER_URL);
+// }
+
+// export function resetBoard(size?: number) {
+//   socket.emit('reset board', size);
+// }
