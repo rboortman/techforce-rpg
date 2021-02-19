@@ -2,7 +2,8 @@ import { connect } from 'socket.io-client';
 
 import { BoardInterface, MoveDirection, PartialPlayer, Player, PlayerDataStore } from '../common/interfaces';
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'http://34.91.182.222:8080';
+// const SERVER_URL = 'http://localhost:8080';
 
 let socket = connect(SERVER_URL);
 socket.on('connect', () => {
