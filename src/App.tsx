@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box, ThemeProvider } from '@material-ui/core';
 
 import theme from './common/theme';
+import { BoardInterface, Player, PlayerDataStore } from './common/interfaces';
 
 import Grid from './board/Grid';
 import AppBar from './header/AppBar';
 import Controls from './board/Controls';
-import { BoardInterface, Player, PlayerDataStore } from './common/interfaces';
 import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown } from './api/game';
 import PlayerInfo from './board/PlayerInfo';
 
@@ -61,8 +61,8 @@ export default function App() {
           <Grid playerData={playerDataStore} board={board} />
         </Box>
         <Box className="bottom">
-          {player && <Controls board={board} player={player} />}
-          <PlayerInfo playerStore={playerDataStore}/>
+          {player && <Controls player={player} />}
+          <PlayerInfo playerStore={playerDataStore} />
         </Box>
       </Box>
     </ThemeProvider>

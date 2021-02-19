@@ -1,9 +1,3 @@
-interface AttackConfig {
-  attackingUntil: Date;
-  damage: number;
-  userId: string;
-}
-
 enum Obstacles {
   ROCK = 'rock'
 }
@@ -11,7 +5,6 @@ enum Obstacles {
 export interface TileConfig {
   userId: string;
   obstacle: Obstacles | null;
-  attacks: AttackConfig[];
 }
 
 type Row = {

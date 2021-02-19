@@ -8,7 +8,7 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import { BoardInterface, MoveDirection, Player } from '../common/interfaces';
+import { MoveDirection, Player } from '../common/interfaces';
 import { attack, move, resetBoard } from '../api/game';
 
 const useStyles = makeStyles(theme => ({
@@ -34,11 +34,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface ControlsProps {
-  board: BoardInterface;
   player?: Player;
 }
 
-export default function Controls({ board, player }: ControlsProps) {
+export default function Controls({ player }: ControlsProps) {
   const classes = useStyles();
 
   function onClickResetBoard() {

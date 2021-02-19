@@ -46,7 +46,6 @@ export default function ColorPicker({ onChange, color }: ColorPickerProps) {
         max={shades.length - 1}
         getAriaValueText={valueLabelFormat}
         valueLabelFormat={valueLabelFormat}
-        // aria-labelledby="discrete-slider"
         onChange={(_, newValue: number | number[]) => {
           if (typeof newValue === 'number') {
             onChange(temp[hue][shades[newValue]]);

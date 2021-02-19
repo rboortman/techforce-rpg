@@ -1,12 +1,13 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 
-import Tile from './Tile';
 import { tileSize } from '../common/generalVariables';
 import { BoardInterface, PlayerDataStore } from '../common/interfaces';
 
-const useStyles = makeStyles((theme: Theme) =>
+import Tile from './Tile';
+
+const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       display: 'grid',
@@ -30,9 +31,11 @@ export default function Grid({ board, playerData }: GridProps) {
 
   return (
     <Box className={classes.root} gridTemplateColumns={`repeat(${gridSize}, ${tileSize}px)`} gridTemplateRows={`repeat(${gridSize}, ${tileSize}px)`}>
-      {board.rows.map((row, i) => row.cells.map((tileConfig, j) => 
-        <Tile key={`${i},${j}`} tileConfig={tileConfig} playerData={playerData} />
-      ))}
+      {board.rows.map((row, i) => {
+        return row.cells.map((tileConfig, j) => {
+          return <Tile key={`${i},${j}`} tileConfig={tileConfig} playerData={playerData} />;
+        });
+      })}
     </Box>
   );
 }
