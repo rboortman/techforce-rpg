@@ -99,7 +99,7 @@ You can add an attack button to the controls, or in any other location of your c
 
 In order to complete this assignment, you need to finishe the [_Connect to server_](#connect-to-server) assignment first.
 By now there must be a lot of different tiny wizards on your screen, but it must be difficult to keep them all apart.
-Implement a separate component that lists out all the 
+Implement a separate component that lists out all the different user. You can add things like health, name, color, etc.
 
 ### Enable keyboard input
 
