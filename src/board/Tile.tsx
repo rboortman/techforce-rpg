@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 
 import { tileSize } from '../common/generalVariables';
-import { PlayerDataStore, TileConfig } from '../common/interfaces';
+import { BoardCoordinate, PlayerDataStore, TileConfig } from '../common/interfaces';
+import { subscribeToTile } from '../api/game';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -28,15 +29,21 @@ const useStyles = makeStyles(theme =>
 );
 
 interface TileProps {
-  tileConfig: TileConfig;
-  playerData: PlayerDataStore;
+  boardCoordinate: BoardCoordinate;
 }
 
-export default function Tile({ tileConfig, playerData }: TileProps) {
+export default function Tile({ boardCoordinate }: TileProps) {
+
+  const [tileConfig, setTileConfig] = useState<TileConfig>({obstacle: null, userId: ''})
+
+  useEffect(() => {
+    subscribeToTile(boardCoordinate, setTileConfig)
+  }, []);
+
   const classes = useStyles();
 
   let backgroundColor: string = grey[50];
-  if (tileConfig.userId) backgroundColor = playerData[tileConfig.userId]?.color;
+  // if (tileConfig.userId) backgroundColor = playerData[tileConfig.userId]?.color;
   if (tileConfig.obstacle) backgroundColor = grey[700];
 
   let content = '';

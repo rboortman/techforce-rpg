@@ -3,7 +3,7 @@ import { Box } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 
 import { tileSize } from '../common/generalVariables';
-import { BoardInterface, PlayerDataStore } from '../common/interfaces';
+import { BoardInterface, GameSettings, PlayerDataStore } from '../common/interfaces';
 
 import Tile from './Tile';
 
@@ -20,22 +20,24 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-interface GridProps {
-  board: BoardInterface;
+interface BoardProps {
+  gameSettings: GameSettings;
   playerData: PlayerDataStore;
 }
 
-export default function Grid({ board, playerData }: GridProps) {
+export default function Board({ gameSettings, playerData }: BoardProps) {
   const classes = useStyles();
-  const gridSize = board.rows.length;
+  const { gridSize } = gameSettings;
+
+  const rows = [...new Array(gridSize)].map((row, y) => (
+    [...new Array(gridSize)].map((column, x) => (
+      <Tile key={`${y},${x}`} boardCoordinate={{x, y}} />
+    ))
+  ))
 
   return (
     <Box className={classes.root} gridTemplateColumns={`repeat(${gridSize}, ${tileSize}px)`} gridTemplateRows={`repeat(${gridSize}, ${tileSize}px)`}>
-      {board.rows.map((row, i) => {
-        return row.cells.map((tileConfig, j) => {
-          return <Tile key={`${i},${j}`} tileConfig={tileConfig} playerData={playerData} />;
-        });
-      })}
+      {rows}
     </Box>
   );
 }

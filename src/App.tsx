@@ -1,55 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import { Box, ThemeProvider } from '@material-ui/core';
 
+// App core
 import theme from './common/theme';
-import { BoardInterface, Player, PlayerDataStore } from './common/interfaces';
+import { BoardInterface, GameSettings, Player, PlayerDataStore } from './common/interfaces';
+import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown, getGameSettings } from './api/game';
 
-import Grid from './board/Grid';
+// Components
+import Board from './board/Board';
 import AppBar from './header/AppBar';
 import Controls from './board/Controls';
-import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown } from './api/game';
 import PlayerInfo from './board/PlayerInfo';
 
 const initialState: BoardInterface = { rows: [{ cells: [] }] };
 
 export default function App() {
   const [playerId, setPlayerId] = useState<string>('');
+  const [gameSettings, setGameSettings] = useState<GameSettings | undefined>();
   const [playerDataStore, setPlayerDataStore] = useState<PlayerDataStore>({});
-  const [board, setBoard] = useState<BoardInterface>(initialState);
+
+  console.log(playerDataStore)
 
   const player: Player | undefined = playerDataStore && playerDataStore[playerId];
 
   useEffect(() => {
-    subscribeToBoard(board => {
-      setBoard(board);
-    });
-
-    subscribeToPlayers(players => {
-      setPlayerDataStore(players);
-    });
-
+    
+    // Async initializer function
     async function initialize() {
+
+      // Register player
       const player = await register();
-      console.log(player.id);
       setPlayerId(player.id);
+
+      // Get game settings
+      const gameSettings = await getGameSettings()
+      setGameSettings(gameSettings);
+
+      subscribeToPlayers(players => {
+        setPlayerDataStore(players);
+      });
     }
 
+    // Call initializer
     initialize();
 
+    // Shutdown socket connection when closing game
     return function () {
       shutdown();
     };
   }, []);
 
   useEffect(() => {
-    function isPlayerOnBoard() {
-      return board.rows.some(row => row.cells.some(cell => cell.userId === playerId));
-    }
-
-    if (playerId && !isPlayerOnBoard()) {
-      joinGame(playerId);
-    }
-  }, [board, playerId]);
+    joinGame(playerId);
+  }, [playerId]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -58,7 +61,9 @@ export default function App() {
           <AppBar player={player} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          <Grid playerData={playerDataStore} board={board} />
+          {gameSettings && 
+            <Board playerData={playerDataStore} gameSettings={gameSettings} />
+          }
         </Box>
         <Box className="bottom">
           {player && <Controls player={player} />}

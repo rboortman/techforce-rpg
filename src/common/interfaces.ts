@@ -1,7 +1,10 @@
-enum Obstacles {
+export enum Obstacles {
   ROCK = 'rock'
 }
 
+export interface GameSettings {
+  gridSize: number;
+}
 export interface TileConfig {
   userId: string;
   obstacle: Obstacles | null;
