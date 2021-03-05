@@ -1,4 +1,4 @@
-enum Obstacles {
+export enum Obstacles {
   ROCK = 'rock'
 }
 
@@ -31,11 +31,6 @@ export interface Player {
   name: string;
   color: string;
   isAdmin?: boolean;
-
-  health: number;
-  attack: number;
-  speed: number;
-  range: number;
 }
 
 export interface PartialPlayer {
@@ -43,10 +38,6 @@ export interface PartialPlayer {
   name?: string;
   color?: string;
   isAdmin?: boolean;
-  health?: number;
-  attack?: number;
-  speed?: number;
-  range?: number;
 }
 
 export interface PlayerDataStore {

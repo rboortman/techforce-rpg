@@ -4,7 +4,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 
 import { tileSize } from '../common/generalVariables';
-import { PlayerDataStore, TileConfig } from '../common/interfaces';
+import { Player, TileConfig } from '../common/interfaces';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -29,14 +29,14 @@ const useStyles = makeStyles(theme =>
 
 interface TileProps {
   tileConfig: TileConfig;
-  playerData: PlayerDataStore;
+  player: Player;
 }
 
-export default function Tile({ tileConfig, playerData }: TileProps) {
+export default function Tile({ tileConfig, player }: TileProps) {
   const classes = useStyles();
 
   let backgroundColor: string = grey[50];
-  if (tileConfig.userId) backgroundColor = playerData[tileConfig.userId]?.color;
+  if (tileConfig.userId === player.id) backgroundColor = player.color;
   if (tileConfig.obstacle) backgroundColor = grey[700];
 
   let content = '';

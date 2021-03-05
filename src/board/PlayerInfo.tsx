@@ -22,11 +22,7 @@ export default function PlayerInfo({ playerStore }: PlayerInfoProps) {
   return (
     <Box className={classes.root}>
       {Object.values(playerStore).map(player => {
-        return (
-          <div key={player.id}>
-            {player.name || player.id}: {player.health}
-          </div>
-        );
+        return <Box key={player.id}>{player.name || player.id}</Box>;
       })}
     </Box>
   );
