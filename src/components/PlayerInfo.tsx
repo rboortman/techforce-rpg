@@ -1,8 +1,11 @@
 import React from 'react';
+
+// Material UI
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
-import { PlayerDataStore } from '../common/interfaces';
+// Hooks
+import { usePlayerDataStore } from '../hooks/usePlayerDataStore';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -12,16 +15,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface PlayerInfoProps {
-  playerStore: PlayerDataStore;
-}
-
-export default function PlayerInfo({ playerStore }: PlayerInfoProps) {
+export default function PlayerInfo() {
   const classes = useStyles();
+  const playerDataStore = usePlayerDataStore();
 
   return (
     <Box className={classes.root}>
-      {Object.values(playerStore).map(player => {
+      {Object.values(playerDataStore).map(player => {
         return (
           <div key={player.id}>
             {player.name || player.id}: {player.health}

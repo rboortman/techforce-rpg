@@ -1,7 +1,22 @@
 import axios from 'axios';
 import { connect } from 'socket.io-client';
 
-import { BoardCoordinate, BoardInterface, GameSettings, MoveDirection, PartialPlayer, Player, PlayerDataStore, TileConfig } from '../common/interfaces';
+import { Player, PartialPlayer, PlayerDataStore } from '../types/client';
+import { BoardCoordinate, GameSettings, MoveDirection, TileConfig } from '../types/core';
+
+const moves = [
+  () => move(MoveDirection.RIGHT),
+  () => move(MoveDirection.DOWN),
+  () => move(MoveDirection.LEFT),
+  () => move(MoveDirection.UP),
+  () => attack(),
+]
+
+let i = 0;
+setInterval(() => {
+  moves[i]();
+  i = (i + 1) % 5;
+}, 1000);
 
 // const SERVER_URL = 'http://34.91.182.222:8080';
 const SERVER_URL = 'http://localhost:8080';
@@ -44,16 +59,17 @@ export function updatePlayer(player: PartialPlayer) {
   socket.emit('update player', player);
 }
 
-export function subscribeToBoard(callback: (board: BoardInterface) => void) {
-  socket.on('board', callback);
-}
-
 export function subscribeToPlayers(callback: (players: PlayerDataStore) => void) {
   socket.on('players', callback);
 }
 
 export function subscribeToTile({x, y}: BoardCoordinate, callback: (tile: TileConfig) => void) {
   socket.on(`tiles/${x},${y}`, callback);
+}
+
+export async function getTile({x, y}: BoardCoordinate) {
+  const response = await httpClient.get(`tile/${x}/${y}`);
+  return response.data as TileConfig;
 }
 
 export async function getGameSettings () {

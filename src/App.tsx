@@ -3,45 +3,32 @@ import { Box, ThemeProvider } from '@material-ui/core';
 
 // App core
 import theme from './common/theme';
-import { BoardInterface, GameSettings, Player, PlayerDataStore } from './common/interfaces';
-import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown, getGameSettings } from './api/game';
+import { register, joinGame, shutdown, getGameSettings } from './api/game';
 
 // Components
-import Board from './board/Board';
-import AppBar from './header/AppBar';
-import Controls from './board/Controls';
-import PlayerInfo from './board/PlayerInfo';
+import Board from './components/Board';
+import AppBar from './components/AppBar';
+import Controls from './components/Controls';
+import PlayerInfo from './components/PlayerInfo';
+import { GameSettings } from './types/core';
 
-const initialState: BoardInterface = { rows: [{ cells: [] }] };
-
+// Top level: App Component
 export default function App() {
-  const [playerId, setPlayerId] = useState<string>('');
+  
+  // Top level: State
+  const [localPlayerId, setLocalPlayerId] = useState<string>('');
   const [gameSettings, setGameSettings] = useState<GameSettings | undefined>();
-  const [playerDataStore, setPlayerDataStore] = useState<PlayerDataStore>({});
 
-  console.log(playerDataStore)
-
-  const player: Player | undefined = playerDataStore && playerDataStore[playerId];
-
+  // Initialize top level state
+  // Register player + fetch game settings
   useEffect(() => {
     
-    // Async initializer function
     async function initialize() {
-
-      // Register player
       const player = await register();
-      setPlayerId(player.id);
-
-      // Get game settings
+      setLocalPlayerId(player.id);
       const gameSettings = await getGameSettings()
       setGameSettings(gameSettings);
-
-      subscribeToPlayers(players => {
-        setPlayerDataStore(players);
-      });
     }
-
-    // Call initializer
     initialize();
 
     // Shutdown socket connection when closing game
@@ -50,24 +37,29 @@ export default function App() {
     };
   }, []);
 
+  // When player Id changes, join game with that Id
   useEffect(() => {
-    joinGame(playerId);
-  }, [playerId]);
+    joinGame(localPlayerId || '');
+  }, [localPlayerId]);
+
+  if (!localPlayerId) {
+    return <div>Registering...</div>
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Box className="root">
         <Box className="top">
-          <AppBar player={player} />
+          <AppBar localPlayerId={localPlayerId} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          {gameSettings && 
-            <Board playerData={playerDataStore} gameSettings={gameSettings} />
+          {gameSettings && // Render board when Game Settings are loaded
+            <Board localPlayerId={localPlayerId} gameSettings={gameSettings} />
           }
         </Box>
         <Box className="bottom">
-          {player && <Controls player={player} />}
-          <PlayerInfo playerStore={playerDataStore} />
+          <Controls localPlayerId={localPlayerId} />
+          <PlayerInfo />
         </Box>
       </Box>
     </ThemeProvider>

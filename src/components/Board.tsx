@@ -2,10 +2,10 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 
-import { tileSize } from '../common/generalVariables';
-import { BoardInterface, GameSettings, PlayerDataStore } from '../common/interfaces';
+import { TILE_SIZE } from '../common/constants';
 
-import Tile from './Tile';
+import BoardTile from './BoardTile';
+import { GameSettings } from '../types/core';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -22,21 +22,22 @@ const useStyles = makeStyles(theme =>
 
 interface BoardProps {
   gameSettings: GameSettings;
-  playerData: PlayerDataStore;
+  localPlayerId: string;
 }
 
-export default function Board({ gameSettings, playerData }: BoardProps) {
+export default function Board({ gameSettings, localPlayerId }: BoardProps) {
   const classes = useStyles();
   const { gridSize } = gameSettings;
 
+  // Make a Tile for each cell
   const rows = [...new Array(gridSize)].map((row, y) => (
     [...new Array(gridSize)].map((column, x) => (
-      <Tile key={`${y},${x}`} boardCoordinate={{x, y}} />
+      <BoardTile localPlayerId={localPlayerId} key={`${y},${x}`} boardCoordinate={{x, y}} />
     ))
   ))
 
   return (
-    <Box className={classes.root} gridTemplateColumns={`repeat(${gridSize}, ${tileSize}px)`} gridTemplateRows={`repeat(${gridSize}, ${tileSize}px)`}>
+    <Box className={classes.root} gridTemplateColumns={`repeat(${gridSize}, ${TILE_SIZE}px)`} gridTemplateRows={`repeat(${gridSize}, ${TILE_SIZE}px)`}>
       {rows}
     </Box>
   );

@@ -8,8 +8,10 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import { MoveDirection, Player } from '../common/interfaces';
 import { attack, move, resetBoard } from '../api/game';
+import { usePlayerDataStore } from '../hooks/usePlayerDataStore';
+import { Player } from '../types/client';
+import { MoveDirection } from '../types/core';
 
 const useStyles = makeStyles(theme => ({
   controls: {
@@ -34,11 +36,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface ControlsProps {
-  player?: Player;
+  localPlayerId?: string;
 }
 
-export default function Controls({ player }: ControlsProps) {
+export default function Controls({ localPlayerId }: ControlsProps) {
   const classes = useStyles();
+  const playerDataStore = usePlayerDataStore();
 
   function onClickResetBoard() {
     resetBoard();
@@ -48,9 +51,11 @@ export default function Controls({ player }: ControlsProps) {
     move(direction);
   }
 
-  async function dealDamage() {
+  function dealDamage() {
     attack();
   }
+
+  const player: Player | undefined = playerDataStore[localPlayerId || ''];
 
   return (
     <Box className={classes.controls}>

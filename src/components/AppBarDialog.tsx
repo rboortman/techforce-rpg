@@ -12,16 +12,16 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Face from '@material-ui/icons/Face';
 
-import { Player } from '../common/interfaces';
 import { resetBoard, updatePlayer } from '../api/game';
 
-import ColorPicker from '../common/ColorPicker';
+import ColorPicker from './ColorPicker';
+import { Player } from '../types/client';
 
-interface UserDialogProps {
+interface AppBarDialogProps {
   player: Player;
 }
 
-export default function UserDialog({ player }: UserDialogProps) {
+export default function AppBarDialog({ player }: AppBarDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [color, setColor] = React.useState('#2196f3');
   const theme = useTheme();
