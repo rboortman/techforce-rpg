@@ -35,7 +35,7 @@ interface BoardTileProps {
 
 export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileProps) {
 
-  const [tileConfig, setTileConfig] = useState<TileConfig>({obstacle: null, playerId: ''})
+  const [tileConfig, setTileConfig] = useState<TileConfig>({obstacle: null, playerId: '', playerColor: ''})
 
   useEffect(() => {
     // Retrieve initial tile data
@@ -52,6 +52,7 @@ export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileP
   const classes = useStyles();
 
   let backgroundColor: string = grey[50];
+  if (tileConfig.playerColor) backgroundColor = tileConfig.playerColor;
   if (tileConfig.obstacle) backgroundColor = grey[700];
 
   let content = '';

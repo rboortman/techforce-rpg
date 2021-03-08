@@ -15,6 +15,7 @@ export interface BoardInterface {
 
 export interface TileConfig {
   playerId: string;
+  playerColor: string;
   obstacle: Obstacles | null;
 }
 
