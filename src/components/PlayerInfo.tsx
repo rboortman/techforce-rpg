@@ -24,7 +24,7 @@ export default function PlayerInfo() {
       {Object.values(playerDataStore).map(player => {
         return (
           <div key={player.id}>
-            {player.name || player.id}: {player.health}
+            {player.name || player.id}: {player.health} ({player.kills}/{player.deaths})
           </div>
         );
       })}

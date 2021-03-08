@@ -8,6 +8,9 @@ export interface Player {
   attack: number;
   speed: number;
   range: number;
+
+  kills: number;
+  deaths: number;
 }
 
 export interface PartialPlayer {

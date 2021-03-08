@@ -4,19 +4,19 @@ import { connect } from 'socket.io-client';
 import { Player, PartialPlayer, PlayerDataStore } from '../types/client';
 import { BoardCoordinate, GameSettings, MoveDirection, TileConfig } from '../types/core';
 
-const moves = [
-  () => move(MoveDirection.RIGHT),
-  () => move(MoveDirection.DOWN),
-  () => move(MoveDirection.LEFT),
-  () => move(MoveDirection.UP),
-  () => attack(),
-]
+// const moves = [
+//   () => move(MoveDirection.RIGHT),
+//   () => move(MoveDirection.DOWN),
+//   () => move(MoveDirection.LEFT),
+//   () => move(MoveDirection.UP),
+//   () => attack(),
+// ]
 
-let i = 0;
-setInterval(() => {
-  moves[i]();
-  i = (i + 1) % 5;
-}, 1000);
+// let i = 0;
+// setInterval(() => {
+//   moves[i]();
+//   i = (i + 1) % 5;
+// }, 1000);
 
 // const SERVER_URL = 'http://34.91.182.222:8080';
 const SERVER_URL = 'http://localhost:8080';
