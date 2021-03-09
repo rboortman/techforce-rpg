@@ -17,6 +17,9 @@ export interface TileConfig {
   playerId: string;
   playerColor: string;
   obstacle: Obstacles | null;
+  attackingUntil: Date | null;
+  damage: number;
+  attackedBy: string
 }
 
 export enum MoveDirection {

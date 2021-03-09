@@ -35,7 +35,14 @@ interface BoardTileProps {
 
 export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileProps) {
 
-  const [tileConfig, setTileConfig] = useState<TileConfig>({obstacle: null, playerId: '', playerColor: ''})
+  const [tileConfig, setTileConfig] = useState<TileConfig>({
+    obstacle: null, 
+    playerId: '', 
+    playerColor: '',
+    attackedBy: '',
+    attackingUntil: null,
+    damage: 0,
+  })
 
   useEffect(() => {
     // Retrieve initial tile data
@@ -58,6 +65,8 @@ export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileP
   let content = '';
   if (tileConfig.playerId) content = '🧙';
   if (tileConfig.playerId === localPlayerId) content = '👑';
+
+  if (tileConfig.attackingUntil) content = '🔥';
 
   return (
     <Box className={classes.root}>
