@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { connect } from 'socket.io-client';
 
 import { Player, PartialPlayer, PlayerDataStore } from '../types/client';
@@ -12,19 +11,13 @@ import { BoardCoordinate, GameSettings, MoveDirection, TileConfig } from '../typ
 //   () => attack(),
 // ]
 
-// let i = 0;
 // setInterval(() => {
+//   const i = Math.floor(Math.random() * 5)
 //   moves[i]();
-//   i = (i + 1) % 5;
 // }, 1000);
 
-// const SERVER_URL = 'http://34.91.182.222:8080';
+// const SERVER_URL = 'https://techforce-rpg-host.zwanenburg.info:8080';
 const SERVER_URL = 'http://localhost:8080';
-
-const httpClient = axios.create({
-  baseURL: SERVER_URL,
-  timeout: 5000
-});
 
 let socket = connect(SERVER_URL);
 socket.on('connect', () => {
@@ -63,18 +56,18 @@ export function subscribeToPlayers(callback: (players: PlayerDataStore) => void)
   socket.on('players', callback);
 }
 
-export function subscribeToTile({x, y}: BoardCoordinate, callback: (tile: TileConfig) => void) {
+export function subscribeToTile({ x, y }: BoardCoordinate, callback: (tile: TileConfig) => void) {
   socket.on(`tiles/${x},${y}`, callback);
 }
 
-export async function getTile({x, y}: BoardCoordinate) {
-  const response = await httpClient.get(`tile/${x}/${y}`);
-  return response.data as TileConfig;
+export async function getTile({ x, y }: BoardCoordinate) {
+  const response = await fetch(`${SERVER_URL}/tile/${x}/${y}`);
+  return response.json() as Promise<TileConfig>;
 }
 
-export async function getGameSettings () {
-  const response = await httpClient.get('game/settings');
-  return response.data as GameSettings;
+export async function getGameSettings() {
+  const response = await fetch(`${SERVER_URL}/game/settings`);
+  return response.json() as Promise<GameSettings>;
 }
 
 export function shutdown() {
