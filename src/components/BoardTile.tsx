@@ -54,7 +54,7 @@ export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileP
 
     // Subscribe to tile data
     subscribeToTile(boardCoordinate, setTileConfig)
-  }, []);
+  }, [boardCoordinate]);
 
   const classes = useStyles();
 
