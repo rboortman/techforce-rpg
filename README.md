@@ -83,7 +83,7 @@ Tip; you can open multiple instance of your bot by opening different browser tab
 
 *Note: From here, please switch to the `workshop-multiplayer` branch!*
 
-### **Multiplayer: Implement move (again?!)
+### **Multiplayer: Implement move (again?!)**
 
 As you may have noticed, movements are again not working anymore. This is because the game state is now kept server-side. Quickly enable this feature again before you're eaten by other hungry wizards.
 Look in `src/api/game.ts` for some useful functions.
