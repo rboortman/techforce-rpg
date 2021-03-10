@@ -3,7 +3,7 @@ import { Box, ThemeProvider } from '@material-ui/core';
 
 // App core
 import theme from './common/theme';
-import { register, joinGame, shutdown, getGameSettings } from './api/game';
+import { register, joinGame, shutdown, getGameSettings, subscribeToDeath } from './api/game';
 
 // Components
 import Board from './components/Board';
@@ -28,6 +28,13 @@ export default function App() {
       setLocalPlayerId(player.id);
       const gameSettings = await getGameSettings()
       setGameSettings(gameSettings);
+
+      // Respawn when local player died
+      subscribeToDeath((playerId) => {
+        if (playerId === player.id) {
+          joinGame(player.id);
+        }
+      })
     }
     initialize();
 
@@ -39,7 +46,7 @@ export default function App() {
 
   // When player Id changes, join game with that Id
   useEffect(() => {
-    joinGame(localPlayerId || '');
+    joinGame(localPlayerId);
   }, [localPlayerId]);
 
   if (!localPlayerId) {

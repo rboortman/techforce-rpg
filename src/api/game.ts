@@ -56,6 +56,10 @@ export function subscribeToPlayers(callback: (players: PlayerDataStore) => void)
   socket.on('players', callback);
 }
 
+export function subscribeToDeath(callback: (playerId: string) => void) {
+  socket.on('death', callback);
+}
+
 export function subscribeToTile({ x, y }: BoardCoordinate, callback: (tile: TileConfig) => void) {
   socket.on(`tiles/${x},${y}`, callback);
 }
