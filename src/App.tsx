@@ -14,7 +14,6 @@ import { GameSettings } from './types/core';
 
 // Top level: App Component
 export default function App() {
-  
   // Top level: State
   const [localPlayerId, setLocalPlayerId] = useState<string>('');
   const [gameSettings, setGameSettings] = useState<GameSettings | undefined>();
@@ -22,23 +21,22 @@ export default function App() {
   // Initialize top level state
   // Register player + fetch game settings
   useEffect(() => {
-    
     async function initialize() {
       const player = await register();
       setLocalPlayerId(player.id);
-      const gameSettings = await getGameSettings()
+      const gameSettings = await getGameSettings();
       setGameSettings(gameSettings);
 
       // Respawn when local player died
-      subscribeToDeath((playerId) => {
+      subscribeToDeath(playerId => {
         if (playerId === player.id) {
           joinGame(player.id);
         }
-      })
+      });
 
       subscribeToGameSettings(settings => {
         console.log('settings changed');
-        console.log(settings)
+        console.log(settings);
         setGameSettings(settings);
       });
     }
@@ -51,12 +49,12 @@ export default function App() {
   }, []);
 
   // When player Id changes, join game with that Id
-useEffect(() => {
+  useEffect(() => {
     joinGame(localPlayerId);
-  }, [gameSettings]);
+  }, [gameSettings, localPlayerId]);
 
   if (!localPlayerId) {
-    return <div>Registering...</div>
+    return <div>Registering...</div>;
   }
 
   return (
@@ -66,9 +64,14 @@ useEffect(() => {
           <AppBar localPlayerId={localPlayerId} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          {gameSettings && // Render board when Game Settings are loaded
-            <Board localPlayerId={localPlayerId} gameSettings={gameSettings} />
-          }
+          {gameSettings && (
+            <Board
+              localPlayerId={
+                localPlayerId // Render board when Game Settings are loaded
+              }
+              gameSettings={gameSettings}
+            />
+          )}
         </Box>
         <Box className="bottom">
           <Controls localPlayerId={localPlayerId} />
