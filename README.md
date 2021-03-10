@@ -50,11 +50,11 @@ Please contact the creator of this project for help with debugging.
 
 For the workshop, a list of assignments are made available for you to expand the current application. Before starting with the assignments, it's adviced to get yourself familiar with the project and take a look around the folder structure.
 
-The assignments vary in difficulty (they get harder further down) and are mostly independent, stand-alone features (unless stated otherwise). If you feel confident you understand the basics of React, I would suggest you take a look at the assignments and start with one that you feel comfortable with. 
+The assignments vary in difficulty (they get harder further down) and are mostly independent, stand-alone features (unless stated otherwise). If you feel confident you understand the basics of React, I would suggest you take a look at the assignments and start with one that you feel comfortable with.
 
 **Note: For the Multiplayer assignments, please switch to the workshop-multiplayer branch!**
 
-To make the assignments a little more easy, please familiarize yourself with the [Material UI](https://material-ui.com/) library a bit. This is a CSS library that is used in this project to make everything look super fancy! You don't have to know exactly how to implement everything strait away, but it would help if you know what kind of components are made available to you.
+To make the assignments a little easier, please familiarize yourself with the [Material UI](https://material-ui.com/) library a bit. This is a CSS library that is used in this project to make everything look super fancy! You don't have to know exactly how to implement everything strait away, but it would help if you know what kind of components are made available to you.
 
 ### **Enable controls**
 
@@ -75,44 +75,30 @@ Clicking those buttons with your mouse all the time isn't very fast. Implement a
 
 ### **Create bots**
 
-Why should you do all the work? You program stuff to let other people do stuff right?
+Why should you do all the work? You program stuff to let other people do stuff, right?
 Implement a bot that can move and fight for you!
 Tip; you can open multiple instance of your bot by opening different browser tabs pointing to this application.
 
-
 ## Multiplayer assignments
+
 *Note: From here, please switch to the `workshop-multiplayer` branch!*
 
-### **Multiplayer: Connect to server**
+### **Multiplayer: Implement move (again?!)
 
-Instead of playing all by yourself, you can now play online on the world wide web! To do this you'll need to connect the application to the server via an API.
-You can enable this connection in the `src/api/game.ts` file. Over there is a subjet all available command that you can send to the server. You'll need the server IP to do so.
-
-### **Multiplayer: Sync game state**
-
-In order to complete this assignment, you need to finishe the [_Connect to server_](#connect-to-server) assignment first.
-Now that you're connected with the server you can start syncing up the game state with the server. You can start the sync in the `src/App.tsx` file where a outcommented template has been provided.
-
-### **Multiplayer: Update player**
-
-In order to complete this assignment, you need to finishe the [_Connect to server_](#connect-to-server) assignment first.
-Signal your personaly preferences to other players by saving your user settings on the server.
-Look in `src/api/game.ts` for some useful functions.
-
-### **Multiplayer: Sync moves**
-
-In order to complete this assignment, you need to finishe the [_Connect to server_](#connect-to-server) assignment first.
-As you may have noticed, your movements are not recognized by the server and again you're dead in the water! Quickly enable this feature again before you're eaten by other hungry wizards.
+As you may have noticed, movements are again not working anymore. This is because the game state is now kept server-side. Quickly enable this feature again before you're eaten by other hungry wizards.
 Look in `src/api/game.ts` for some useful functions.
 
 ### **Multiplayer: Attack**
 
-In order to complete this assignment, you need to finishe the [_Connect to server_](#connect-to-server) assignment first.
-Here comes the fun part. The server supports damaging other players. Don't worry though, it's too gory. Also they don't really die, they just get send to a wizard farm. At least that's what my mother told me.
+Here comes the fun part. The server supports damaging other players. Don't worry though, it's too gory. Also they don't really die, they just get send to some kind of wizard farm or something. At least that's what my mother told me.
 You can add an attack button to the controls, or in any other location of your chosing. Additionally, look in `src/api/game.ts` for some useful functions.
 
-### **Multiplayer: List online users**
+### **Multiplayer: Player preference**
 
-In order to complete this assignment, you need to finishe the [_Connect to server_](#connect-to-server) assignment first.
+Right now, you're only known as `\b[0-9a-f]{8}\b-\b[0-9a-f]{4}\b-\b[0-9a-f]{4}\b-\b[0-9a-f]{4}\b-\b[0-9a-f]{12}\b` to other players. Let them know who you are and what shade of pink you prefer so that you can instil fear in others. Be on the lookout for other properties of a player that could be changed.
+Again, look in `src/api/game.ts` for some useful functions.
+
+### **Multiplayer: List online players**
+
 By now there must be a lot of different tiny wizards on your screen, but it must be difficult to keep them all apart.
-Implement a separate component that lists out all the different user. You can add things like health, name, color, etc.
+Implement a separate component that lists out all the different players. You can add things like health, name, color, etc.
