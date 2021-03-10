@@ -64,6 +64,10 @@ export function subscribeToTile({ x, y }: BoardCoordinate, callback: (tile: Tile
   socket.on(`tiles/${x},${y}`, callback);
 }
 
+export function subscribeToGameSettings(callback: (settings: GameSettings) => void) {
+  socket.on(`settings`, callback);
+}
+
 export async function getTile({ x, y }: BoardCoordinate) {
   const response = await fetch(`${SERVER_URL}/tile/${x}/${y}`);
   return response.json() as Promise<TileConfig>;
@@ -73,6 +77,7 @@ export async function getGameSettings() {
   const response = await fetch(`${SERVER_URL}/game/settings`);
   return response.json() as Promise<GameSettings>;
 }
+
 
 export function shutdown() {
   socket.close();

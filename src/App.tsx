@@ -3,7 +3,7 @@ import { Box, ThemeProvider } from '@material-ui/core';
 
 // App core
 import theme from './common/theme';
-import { register, joinGame, shutdown, getGameSettings, subscribeToDeath } from './api/game';
+import { register, joinGame, shutdown, getGameSettings, subscribeToDeath, subscribeToGameSettings } from './api/game';
 
 // Components
 import Board from './components/Board';
@@ -35,6 +35,12 @@ export default function App() {
           joinGame(player.id);
         }
       })
+
+      subscribeToGameSettings(settings => {
+        console.log('settings changed');
+        console.log(settings)
+        setGameSettings(settings);
+      });
     }
     initialize();
 
@@ -45,9 +51,9 @@ export default function App() {
   }, []);
 
   // When player Id changes, join game with that Id
-  useEffect(() => {
+useEffect(() => {
     joinGame(localPlayerId);
-  }, [localPlayerId]);
+  }, [gameSettings]);
 
   if (!localPlayerId) {
     return <div>Registering...</div>

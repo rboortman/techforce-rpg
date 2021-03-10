@@ -44,7 +44,7 @@ export default function Controls({ localPlayerId }: ControlsProps) {
   const playerDataStore = usePlayerDataStore();
 
   function onClickResetBoard() {
-    resetBoard();
+    resetBoard(25);
   }
 
   function onClickMove(direction: MoveDirection) {
