@@ -44,11 +44,15 @@ export default function Controls({ localPlayerId }: ControlsProps) {
   const playerDataStore = usePlayerDataStore();
 
   function onClickResetBoard() {
-    // Don't touch this, admins only!
+    resetBoard();
   }
 
   function onClickMove(direction: MoveDirection) {
-    // TODO: Implement moving the charactar
+    move(direction);
+  }
+
+  function dealDamage() {
+    attack();
   }
 
   const player: Player | undefined = playerDataStore[localPlayerId || ''];
@@ -76,6 +80,7 @@ export default function Controls({ localPlayerId }: ControlsProps) {
             <KeyboardArrowRight />
           </IconButton>
           {player?.isAdmin ? <Button onClick={onClickResetBoard}>Reset board</Button> : null}
+          <Button onClick={dealDamage}>Attack!</Button>
         </Box>
       </Box>
     </Box>

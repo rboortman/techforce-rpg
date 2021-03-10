@@ -16,8 +16,8 @@ import { BoardCoordinate, GameSettings, MoveDirection, TileConfig } from '../typ
 //   moves[i]();
 // }, 1000);
 
-// const SERVER_URL = 'https://techforce-rpg-host.zwanenburg.info:8080';
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'http://techforce-rpg-host.zwanenburg.info:8080';
+// const SERVER_URL = 'http://localhost:8080';
 
 let socket = connect(SERVER_URL);
 socket.on('connect', () => {
