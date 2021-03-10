@@ -13,17 +13,10 @@ export interface BoardInterface {
   rows: Row[];
 }
 
-export interface Attack {
-  until: string;
-  damage: number;
-  attackedBy: string;
-}
-
 export interface TileConfig {
   playerId: string;
-  playerColor: string;
   obstacle: Obstacles | null;
-  attacks: Attack[];
+  attackedUntil: Date | null;
 }
 
 export enum MoveDirection {

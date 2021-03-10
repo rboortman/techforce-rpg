@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 
 import { TILE_SIZE } from '../common/constants';
-import { getTile, subscribeToTile } from '../api/game';
-import { BoardCoordinate, TileConfig } from '../types/core';
+import { TileConfig } from '../types/core';
+import { Player } from '../types/client';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -29,41 +29,19 @@ const useStyles = makeStyles(theme =>
 );
 
 interface BoardTileProps {
-  boardCoordinate: BoardCoordinate;
-  localPlayerId: string;
+  tileConfig: TileConfig;
+  player: Player;
 }
 
-export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileProps) {
-  const [tileConfig, setTileConfig] = useState<TileConfig>({
-    obstacle: null,
-    playerId: '',
-    playerColor: '',
-    attacks: []
-  });
-
-  useEffect(() => {
-    // Retrieve initial tile data
-    const initialize = async () => {
-      const initialTileData = await getTile(boardCoordinate);
-      setTileConfig(initialTileData);
-    };
-    initialize();
-
-    // Subscribe to tile data
-    subscribeToTile(boardCoordinate, setTileConfig);
-  }, [boardCoordinate]);
-
+export default function BoardTile({ tileConfig, player }: BoardTileProps) {
   const classes = useStyles();
 
   let backgroundColor: string = grey[50];
-  if (tileConfig.playerColor) backgroundColor = tileConfig.playerColor;
+  if (tileConfig.playerId === player.id) backgroundColor = player.color;
   if (tileConfig.obstacle) backgroundColor = grey[700];
 
   let content = '';
   if (tileConfig.playerId) content = '🧙';
-  if (tileConfig.playerId === localPlayerId) content = '👑';
-
-  if (tileConfig.attacks.length > 0) content = '🔥';
 
   return (
     <Box className={classes.root}>

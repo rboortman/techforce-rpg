@@ -12,16 +12,16 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Face from '@material-ui/icons/Face';
 
-import { resetBoard, updatePlayer } from '../api/game';
+import { PartialPlayer, Player } from '../types/client';
 
 import ColorPicker from './ColorPicker';
-import { Player } from '../types/client';
 
-interface AppBarDialogProps {
+interface UserDialogProps {
   player: Player;
+  updatePlayer: (player: PartialPlayer) => void;
 }
 
-export default function AppBarDialog({ player }: AppBarDialogProps) {
+export default function UserDialog({ player, updatePlayer }: UserDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [color, setColor] = React.useState('#2196f3');
   const theme = useTheme();
@@ -40,11 +40,11 @@ export default function AppBarDialog({ player }: AppBarDialogProps) {
   }
 
   function changeGridSize(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    resetBoard(Number(event.target.value));
+    // Don't touch this, admins only!
   }
 
   return (
-    <div>
+    <Box>
       <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleClickOpen}>
         <Face />
       </IconButton>
@@ -75,6 +75,6 @@ export default function AppBarDialog({ player }: AppBarDialogProps) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 }

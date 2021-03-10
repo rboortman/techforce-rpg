@@ -1,81 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, ThemeProvider } from '@material-ui/core';
 
 // App core
 import theme from './common/theme';
-import { register, joinGame, shutdown, getGameSettings, subscribeToDeath, subscribeToGameSettings } from './api/game';
 
 // Components
 import Board from './components/Board';
 import AppBar from './components/AppBar';
 import Controls from './components/Controls';
-import PlayerInfo from './components/PlayerInfo';
-import { GameSettings } from './types/core';
+import { BoardInterface, MoveDirection } from './types/core';
+import { INITIAL_BOARD } from './common/constants';
+import { PartialPlayer, Player } from './types/client';
 
 // Top level: App Component
 export default function App() {
+  
   // Top level: State
-  const [localPlayerId, setLocalPlayerId] = useState<string>('');
-  const [gameSettings, setGameSettings] = useState<GameSettings | undefined>();
+  const [player, setPlayer] = useState<Player>({
+    id: '42',
+    name: 'super-bozz72',
+    color: '#2196f3'
+  });
+  const [board, setBoard] = useState<BoardInterface>(INITIAL_BOARD);
 
-  // Initialize top level state
-  // Register player + fetch game settings
-  useEffect(() => {
-    async function initialize() {
-      const player = await register();
-      setLocalPlayerId(player.id);
-      const gameSettings = await getGameSettings();
-      setGameSettings(gameSettings);
-
-      // Respawn when local player died
-      subscribeToDeath(playerId => {
-        if (playerId === player.id) {
-          joinGame(player.id);
-        }
+  function movePlayer(direction: MoveDirection) {
+    let position = { x: 0, y: 0 };
+    board.rows.forEach((row, y) => {
+      row.cells.forEach((cell, x) => {
+        if (cell.playerId === player.id) position = { x, y };
       });
+    });
 
-      subscribeToGameSettings(settings => {
-        console.log('settings changed');
-        console.log(settings);
-        setGameSettings(settings);
-      });
+    switch (direction) {
+      case MoveDirection.UP:
+        position.y--;
+        break;
+
+      case MoveDirection.DOWN:
+        position.y++;
+        break;
+
+      case MoveDirection.LEFT:
+        position.x--;
+        break;
+
+      case MoveDirection.RIGHT:
+        position.x++;
+        break;
     }
-    initialize();
 
-    // Shutdown socket connection when closing game
-    return function () {
-      shutdown();
+    console.log(position)
+
+    // TODO: Validate if the new spot is actually a valid location
+
+    const newBoard = {
+      rows: board.rows.map((row, i) => ({
+        cells: row.cells.map((cell, j) => {
+          return {
+            ...cell,
+            playerId: i === position.y && j === position.x ? player.id : ''
+          };
+        })
+      }))
     };
-  }, []);
 
-  // When player Id changes, join game with that Id
-  useEffect(() => {
-    joinGame(localPlayerId);
-  }, [gameSettings, localPlayerId]);
+    console.log(newBoard);
 
-  if (!localPlayerId) {
-    return <div>Registering...</div>;
+    setBoard(newBoard);
+  }
+
+  function updatePlayer(partialPlayer: PartialPlayer) {
+    setPlayer({
+      ...player,
+      ...partialPlayer
+    });
   }
 
   return (
     <ThemeProvider theme={theme}>
       <Box className="root">
         <Box className="top">
-          <AppBar localPlayerId={localPlayerId} />
+          <AppBar player={player} updatePlayer={updatePlayer} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          {gameSettings && (
-            <Board
-              localPlayerId={
-                localPlayerId // Render board when Game Settings are loaded
-              }
-              gameSettings={gameSettings}
-            />
+          {(
+            <Board player={player} board={board}/>
           )}
         </Box>
         <Box className="bottom">
-          <Controls localPlayerId={localPlayerId} />
-          <PlayerInfo />
+          {player && <Controls player={player} move={movePlayer} />}
         </Box>
       </Box>
     </ThemeProvider>

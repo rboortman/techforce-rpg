@@ -8,8 +8,6 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import { attack, move, resetBoard } from '../api/game';
-import { usePlayerDataStore } from '../hooks/usePlayerDataStore';
 import { Player } from '../types/client';
 import { MoveDirection } from '../types/core';
 
@@ -36,26 +34,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface ControlsProps {
-  localPlayerId?: string;
+  player?: Player;
+  move: (direction: MoveDirection) => void;
 }
 
-export default function Controls({ localPlayerId }: ControlsProps) {
+export default function Controls({ player, move }: ControlsProps) {
   const classes = useStyles();
-  const playerDataStore = usePlayerDataStore();
 
   function onClickResetBoard() {
-    resetBoard();
+    // Don't touch this, admins only!
   }
 
   function onClickMove(direction: MoveDirection) {
-    move(direction);
+    // TODO: Implement moving the charactar
   }
-
-  function dealDamage() {
-    attack();
-  }
-
-  const player: Player | undefined = playerDataStore[localPlayerId || ''];
 
   return (
     <Box className={classes.controls}>
@@ -80,7 +72,7 @@ export default function Controls({ localPlayerId }: ControlsProps) {
             <KeyboardArrowRight />
           </IconButton>
           {player?.isAdmin ? <Button onClick={onClickResetBoard}>Reset board</Button> : null}
-          <Button onClick={dealDamage}>Attack!</Button>
+          {/* <Button onClick={attack}>Attack!</Button> */}
         </Box>
       </Box>
     </Box>

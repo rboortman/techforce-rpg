@@ -4,8 +4,9 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 
 import { TILE_SIZE } from '../common/constants';
 
+import { BoardInterface } from '../types/core';
+import { Player } from '../types/client';
 import BoardTile from './BoardTile';
-import { GameSettings } from '../types/core';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -21,24 +22,22 @@ const useStyles = makeStyles(theme =>
 );
 
 interface BoardProps {
-  gameSettings: GameSettings;
-  localPlayerId: string;
+  board: BoardInterface;
+  player: Player;
 }
 
-export default function Board({ gameSettings, localPlayerId }: BoardProps) {
+export default function Board({ board, player }: BoardProps) {
   const classes = useStyles();
-  const { gridSize } = gameSettings;
-
-  // Make a Tile for each cell
-  const rows = [...new Array(gridSize)].map((row, y) => (
-    [...new Array(gridSize)].map((column, x) => (
-      <BoardTile localPlayerId={localPlayerId} key={`${y},${x}`} boardCoordinate={{x, y}} />
-    ))
-  ))
+  const gridSize = board.rows.length;
 
   return (
     <Box className={classes.root} gridTemplateColumns={`repeat(${gridSize}, ${TILE_SIZE}px)`} gridTemplateRows={`repeat(${gridSize}, ${TILE_SIZE}px)`}>
-      {rows}
+      {board.rows.map((row, i) => {
+        return row.cells.map((tileConfig, j) => {
+          return <BoardTile key={`${i},${j}`} tileConfig={tileConfig} player={player} />;
+        });
+      })}
     </Box>
   );
+
 }

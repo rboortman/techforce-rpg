@@ -5,8 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 import AppBarDialog from './AppBarDialog';
-import { usePlayerDataStore } from '../hooks/usePlayerDataStore';
-import { Player } from '../types/client';
+import { PartialPlayer, Player } from '../types/client';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,14 +20,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AppBarProps {
-  localPlayerId: string;
+  player?: Player;
+  updatePlayer: (player: PartialPlayer) => void;
 }
 
-export default function AppBarComponent({ localPlayerId }: AppBarProps) {
-  const classes = useStyles();
-  const playerDataStore = usePlayerDataStore();
 
-  const player: Player | undefined = playerDataStore && playerDataStore[localPlayerId];
+export default function AppBarComponent({ player, updatePlayer }: AppBarProps) {
+  const classes = useStyles();
 
   return (
     <AppBar position="static">
@@ -36,8 +34,9 @@ export default function AppBarComponent({ localPlayerId }: AppBarProps) {
         <Typography variant="h6" className={classes.title}>
           TECHFORCE RPG
         </Typography>
-        {player && player ? <AppBarDialog player={player} /> : null}
+        {player && player ? <AppBarDialog player={player} updatePlayer={updatePlayer} /> : null}
       </Toolbar>
     </AppBar>
   );
+
 }
