@@ -3,8 +3,9 @@ import { Box } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 
-import { tileSize } from '../common/generalVariables';
-import { PlayerDataStore, TileConfig } from '../common/interfaces';
+import { TILE_SIZE } from '../common/constants';
+import { TileConfig } from '../types/core';
+import { Player } from '../types/client';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -12,8 +13,8 @@ const useStyles = makeStyles(theme =>
       border: 'solid 1px black',
       borderTopWidth: 0,
       borderLeftWidth: 0,
-      width: tileSize,
-      height: tileSize,
+      width: TILE_SIZE,
+      height: TILE_SIZE,
       overflow: 'hidden',
       boxSizing: 'border-box'
     },
@@ -27,20 +28,20 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-interface TileProps {
+interface BoardTileProps {
   tileConfig: TileConfig;
-  playerData: PlayerDataStore;
+  player: Player;
 }
 
-export default function Tile({ tileConfig, playerData }: TileProps) {
+export default function BoardTile({ tileConfig, player }: BoardTileProps) {
   const classes = useStyles();
 
   let backgroundColor: string = grey[50];
-  if (tileConfig.userId) backgroundColor = playerData[tileConfig.userId]?.color;
+  if (tileConfig.playerId === player.id) backgroundColor = player.color;
   if (tileConfig.obstacle) backgroundColor = grey[700];
 
   let content = '';
-  if (tileConfig.userId) content = '🧙';
+  if (tileConfig.playerId) content = '🧙';
 
   return (
     <Box className={classes.root}>

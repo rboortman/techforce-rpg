@@ -1,8 +1,22 @@
 import { connect } from 'socket.io-client';
 
-import { BoardInterface, MoveDirection, PartialPlayer, Player, PlayerDataStore } from '../common/interfaces';
+import { Player, PartialPlayer, PlayerDataStore } from '../types/client';
+import { BoardCoordinate, GameSettings, MoveDirection, TileConfig } from '../types/core';
 
-const SERVER_URL = 'http://34.91.182.222:8080';
+// const moves = [
+//   () => move(MoveDirection.RIGHT),
+//   () => move(MoveDirection.DOWN),
+//   () => move(MoveDirection.LEFT),
+//   () => move(MoveDirection.UP),
+//   () => attack(),
+// ]
+
+// setInterval(() => {
+//   const i = Math.floor(Math.random() * 5)
+//   moves[i]();
+// }, 1000);
+
+const SERVER_URL = 'http://techforce-rpg-host.zwanenburg.info:8080';
 // const SERVER_URL = 'http://localhost:8080';
 
 let socket = connect(SERVER_URL);
@@ -38,13 +52,32 @@ export function updatePlayer(player: PartialPlayer) {
   socket.emit('update player', player);
 }
 
-export function subscribeToBoard(callback: (board: BoardInterface) => void) {
-  socket.on('board', callback);
-}
-
 export function subscribeToPlayers(callback: (players: PlayerDataStore) => void) {
   socket.on('players', callback);
 }
+
+export function subscribeToDeath(callback: (playerId: string) => void) {
+  socket.on('death', callback);
+}
+
+export function subscribeToTile({ x, y }: BoardCoordinate, callback: (tile: TileConfig) => void) {
+  socket.on(`tiles/${x},${y}`, callback);
+}
+
+export function subscribeToGameSettings(callback: (settings: GameSettings) => void) {
+  socket.on(`settings`, callback);
+}
+
+export async function getTile({ x, y }: BoardCoordinate) {
+  const response = await fetch(`${SERVER_URL}/tile/${x}/${y}`);
+  return response.json() as Promise<TileConfig>;
+}
+
+export async function getGameSettings() {
+  const response = await fetch(`${SERVER_URL}/game/settings`);
+  return response.json() as Promise<GameSettings>;
+}
+
 
 export function shutdown() {
   socket.close();

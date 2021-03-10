@@ -2,14 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
-import { MoveDirection, Player } from '../common/interfaces';
-import { attack, move, resetBoard } from '../api/game';
+import { Player } from '../types/client';
+import { MoveDirection } from '../types/core';
 
 const useStyles = makeStyles(theme => ({
   controls: {
@@ -35,21 +34,14 @@ const useStyles = makeStyles(theme => ({
 
 interface ControlsProps {
   player?: Player;
+  move: (direction: MoveDirection) => void;
 }
 
-export default function Controls({ player }: ControlsProps) {
+export default function Controls({ player, move }: ControlsProps) {
   const classes = useStyles();
 
-  function onClickResetBoard() {
-    resetBoard();
-  }
-
   function onClickMove(direction: MoveDirection) {
-    move(direction);
-  }
-
-  async function dealDamage() {
-    attack();
+    // TODO: Implement moving the charactar
   }
 
   return (
@@ -74,8 +66,6 @@ export default function Controls({ player }: ControlsProps) {
           <IconButton edge="start" color="primary" aria-label="menu" onClick={() => onClickMove(MoveDirection.RIGHT)}>
             <KeyboardArrowRight />
           </IconButton>
-          {player?.isAdmin ? <Button onClick={onClickResetBoard}>Reset board</Button> : null}
-          <Button onClick={dealDamage}>Attack!</Button>
         </Box>
       </Box>
     </Box>

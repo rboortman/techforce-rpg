@@ -1,68 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, ThemeProvider } from '@material-ui/core';
 
+// App core
 import theme from './common/theme';
-import { BoardInterface, Player, PlayerDataStore } from './common/interfaces';
 
-import Grid from './board/Grid';
-import AppBar from './header/AppBar';
-import Controls from './board/Controls';
-import { register, joinGame, subscribeToBoard, subscribeToPlayers, shutdown } from './api/game';
-import PlayerInfo from './board/PlayerInfo';
+// Components
+import Board from './components/Board';
+import AppBar from './components/AppBar';
+import Controls from './components/Controls';
+import { BoardInterface, MoveDirection } from './types/core';
+import { INITIAL_BOARD } from './common/constants';
+import { PartialPlayer, Player } from './types/client';
 
-const initialState: BoardInterface = { rows: [{ cells: [] }] };
-
+// Top level: App Component
 export default function App() {
-  const [playerId, setPlayerId] = useState<string>('');
-  const [playerDataStore, setPlayerDataStore] = useState<PlayerDataStore>({});
-  const [board, setBoard] = useState<BoardInterface>(initialState);
+  
+  // Top level: State
+  const [player, setPlayer] = useState<Player>({
+    id: '42',
+    name: 'super-bozz72',
+    color: '#2196f3'
+  });
+  const [board, setBoard] = useState<BoardInterface>(INITIAL_BOARD);
 
-  const player: Player | undefined = playerDataStore && playerDataStore[playerId];
-
-  useEffect(() => {
-    subscribeToBoard(board => {
-      setBoard(board);
+  function movePlayer(direction: MoveDirection) {
+    let position = { x: 0, y: 0 };
+    board.rows.forEach((row, y) => {
+      row.cells.forEach((cell, x) => {
+        if (cell.playerId === player.id) position = { x, y };
+      });
     });
 
-    subscribeToPlayers(players => {
-      setPlayerDataStore(players);
-    });
+    switch (direction) {
+      case MoveDirection.UP:
+        position.y--;
+        break;
 
-    async function initialize() {
-      const player = await register();
-      console.log(player.id);
-      setPlayerId(player.id);
+      case MoveDirection.DOWN:
+        position.y++;
+        break;
+
+      case MoveDirection.LEFT:
+        position.x--;
+        break;
+
+      case MoveDirection.RIGHT:
+        position.x++;
+        break;
     }
 
-    initialize();
+    console.log(position)
 
-    return function () {
-      shutdown();
+    // TODO: Validate if the new spot is actually a valid location
+
+    const newBoard = {
+      rows: board.rows.map((row, i) => ({
+        cells: row.cells.map((cell, j) => {
+          return {
+            ...cell,
+            playerId: i === position.y && j === position.x ? player.id : ''
+          };
+        })
+      }))
     };
-  }, []);
 
-  useEffect(() => {
-    function isPlayerOnBoard() {
-      return board.rows.some(row => row.cells.some(cell => cell.userId === playerId));
-    }
+    console.log(newBoard);
 
-    if (playerId && !isPlayerOnBoard()) {
-      joinGame(playerId);
-    }
-  }, [board, playerId]);
+    setBoard(newBoard);
+  }
+
+  function updatePlayer(partialPlayer: PartialPlayer) {
+    setPlayer({
+      ...player,
+      ...partialPlayer
+    });
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Box className="root">
         <Box className="top">
-          <AppBar player={player} />
+          <AppBar player={player} updatePlayer={updatePlayer} />
         </Box>
         <Box display="flex" className="center" m={1}>
-          <Grid playerData={playerDataStore} board={board} />
+          {(
+            <Board player={player} board={board}/>
+          )}
         </Box>
         <Box className="bottom">
-          {player && <Controls player={player} />}
-          <PlayerInfo playerStore={playerDataStore} />
+          {player && <Controls player={player} move={movePlayer} />}
         </Box>
       </Box>
     </ThemeProvider>
