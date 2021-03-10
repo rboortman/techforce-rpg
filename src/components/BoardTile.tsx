@@ -34,26 +34,23 @@ interface BoardTileProps {
 }
 
 export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileProps) {
-
   const [tileConfig, setTileConfig] = useState<TileConfig>({
-    obstacle: null, 
-    playerId: '', 
+    obstacle: null,
+    playerId: '',
     playerColor: '',
-    attackedBy: '',
-    attackingUntil: null,
-    damage: 0,
-  })
+    attacks: []
+  });
 
   useEffect(() => {
     // Retrieve initial tile data
     const initialize = async () => {
       const initialTileData = await getTile(boardCoordinate);
       setTileConfig(initialTileData);
-    }
+    };
     initialize();
 
     // Subscribe to tile data
-    subscribeToTile(boardCoordinate, setTileConfig)
+    subscribeToTile(boardCoordinate, setTileConfig);
   }, [boardCoordinate]);
 
   const classes = useStyles();
@@ -66,7 +63,7 @@ export default function BoardTile({ boardCoordinate, localPlayerId }: BoardTileP
   if (tileConfig.playerId) content = '🧙';
   if (tileConfig.playerId === localPlayerId) content = '👑';
 
-  if (tileConfig.attackingUntil) content = '🔥';
+  if (tileConfig.attacks.length > 0) content = '🔥';
 
   return (
     <Box className={classes.root}>
